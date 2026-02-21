@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Modelos BIM – Portal HDT</title>
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --primary:#0066cc;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#dc2626;
+      --line:#e2e8f0;
+      --shadow: 0 10px 25px rgba(2,6,23,.08);
+      --radius:14px;
+      --max:1200px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      color:var(--text);
+      background:linear-gradient(180deg,#ffffff 0%, var(--bg) 35%, var(--bg) 100%);
+    }
+    a{color:var(--primary); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:var(--max); margin:0 auto; padding:22px}
+    header{
+      background:rgba(255,255,255,.75);
+      backdrop-filter: blur(10px);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow: var(--shadow);
+      padding:18px 18px 14px;
+    }
+    .top{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-width:260px;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:12px;
+      background:linear-gradient(135deg,var(--primary),#1d4ed8);
+      display:grid;place-items:center;
+      color:#fff;font-weight:800;
+      letter-spacing:.5px;
+    }
+    .title h1{margin:0; font-size:18px; line-height:1.2}
+    .title p{margin:4px 0 0; color:var(--muted); font-size:13px}
+
+    nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:center;
+    }
+    .chip{
+      display:inline-flex; gap:8px; align-items:center;
+      border:1px solid var(--line);
+      background:#fff;
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:13px;
+      color:var(--text);
+    }
+    .chip b{font-weight:700}
+    .btn{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:var(--primary);
+      color:#fff;
+      border:1px solid rgba(0,0,0,.05);
+      font-weight:700;
+      font-size:13px;
+      box-shadow: 0 10px 18px rgba(0,102,204,.18);
+    }
+    .btn.secondary{
+      background:#fff;
+      color:var(--text);
+      box-shadow:none;
+      border:1px solid var(--line);
+    }
+
+    .grid{display:grid; gap:16px; margin-top:18px;}
+    .two{grid-template-columns: 1.4fr 1fr;}
+    .three{grid-template-columns: repeat(3, minmax(0,1fr));}
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+
+    h2{font-size:14px; margin:0 0 10px}
+    .muted{color:var(--muted); font-size:13px}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:12px; color:var(--muted);
+      width:fit-content;
+      margin-top:10px;
+    }
+    .dot{width:10px;height:10px;border-radius:999px; background:var(--ok)}
+    .dot.warn{background:var(--warn)}
+    .dot.bad{background:var(--bad)}
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+      overflow:hidden;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+    th,td{padding:10px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top}
+    th{background:#f8fafc; color:#0f172a; font-size:12px}
+    tr:last-child td{border-bottom:0}
+
+    .viewer{
+      width:100%;
+      height:520px;
+      border:1px dashed #cbd5e1;
+      background:#f8fafc;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      color:var(--muted);
+      text-align:center;
+      padding:18px;
+    }
+    .links{display:flex; gap:10px; flex-wrap:wrap}
+
+    .footer{
+      margin:18px 0 6px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+    }
+
+    @media (max-width: 980px){
+      .two{grid-template-columns:1fr}
+      .three{grid-template-columns:1fr}
+      nav{justify-content:flex-start}
+      .viewer{height:420px}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="top">
+        <div class="brand">
+          <div class="logo">HDT</div>
+          <div class="title">
+            <h1>Modelos BIM — Hospital Docente de Trujillo</h1>
+            <p>Modelo federado · Visores · Enlaces a ACC · Salud del modelo</p>
+          </div>
+        </div>
+
+        <nav>
+          <span class="chip">Fase: <b>RIBA 3–4</b></span>
+          <a class="btn secondary" href="./index.html">Inicio</a>
+          <a class="btn secondary" href="./modelos.html" aria-current="page">Modelos</a>
+          <a class="btn secondary" href="./metricas.html">Métricas</a>
+          <a class="btn secondary" href="./incidencias.html">Incidencias</a>
+          <a class="btn" id="btnAcc" href="#" target="_blank" rel="noreferrer">Abrir ACC</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Bloque superior: Visor / Federado -->
+    <section class="grid two">
+      <div class="card">
+        <h2>Visor de modelos (IFC / Federado)</h2>
+        <p class="muted">
+          Google Sites/ACC/visores web suelen embebirse con iframe. Aquí puedes:
+          (1) insertar un visor web (si tienes URL), o (2) dejar enlaces a ACC Model Viewer.
+        </p>
+
+        <!-- Opción A: Pega aquí un iframe si tienes un visor web -->
+        <!--
+        <iframe
+          src="https://TU-VISOR-IFC.example"
+          width="100%"
+          height="520"
+          style="border:0;border-radius:12px;overflow:hidden"
+          loading="lazy"
+          allowfullscreen
+        ></iframe>
+        -->
+
+        <!-- Opción B: Placeholder hasta tener el visor -->
+        <div class="viewer">
+          <div>
+            <div style="font-weight:800; color:#0f172a; margin-bottom:6px;">
+              Aquí irá tu visor IFC / modelo federado
+            </div>
+            <div>
+              Cuando tengas una URL embebible, reemplaza este bloque por un iframe (comentado arriba).
+              <br/>Mientras tanto usa los botones de acceso a ACC / links por disciplina.
+            </div>
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+        <div class="links">
+          <a class="btn secondary" id="lnkFederado" href="#" target="_blank" rel="noreferrer">Modelo federado (ACC/Viewer)</a>
+          <a class="btn secondary" id="lnkCdeModelos" href="#" target="_blank" rel="noreferrer">Carpeta Modelos en ACC</a>
+          <a class="btn secondary" id="lnkNomenclatura" href="#" target="_blank" rel="noreferrer">Nomenclatura / Estándares</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Salud del modelo (resumen)</h2>
+        <p class="muted">Valores referenciales. Ajusta con tus métricas reales de auditoría.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Métrica</th>
+              <th>Valor</th>
+              <th>Semáforo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Última publicación de modelos</td>
+              <td id="m_last_pub">—</td>
+              <td><span class="pill"><span class="dot"></span>OK</span></td>
+            </tr>
+            <tr>
+              <td>Modelos en revisión</td>
+              <td id="m_in_review">—</td>
+              <td><span class="pill"><span class="dot warn"></span>Revisión</span></td>
+            </tr>
+            <tr>
+              <td>Incidencias por resolver (modelo)</td>
+              <td id="m_issues">—</td>
+              <td><span class="pill"><span class="dot warn"></span>Atención</span></td>
+            </tr>
+            <tr>
+              <td>Calidad de datos (parámetros mínimos)</td>
+              <td id="m_data_quality">—</td>
+              <td><span class="pill"><span class="dot"></span>OK</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="height:12px"></div>
+        <h2>Descargas / entregables</h2>
+        <p class="muted">Enlaza aquí tus paquetes por disciplina (IFC/NWD/ZIP/PDF).</p>
+        <div class="links">
+          <a class="btn secondary" id="lnkPackArq" href="#" target="_blank" rel="noreferrer">Paquete ARQ</a>
+          <a class="btn secondary" id="lnkPackEst" href="#" target="_blank" rel="noreferrer">Paquete EST</a>
+          <a class="btn secondary" id="lnkPackMep" href="#" target="_blank" rel="noreferrer">Paquete MEP</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabla por disciplina -->
+    <section class="grid">
+      <div class="card">
+        <h2>Modelos por disciplina</h2>
+        <p class="muted">
+          Recomiendo que el equipo use 1 registro maestro (Sheets/ACC) y aquí solo reflejas enlaces y estado.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Disciplina</th>
+              <th>Archivo / Modelo</th>
+              <th>Versión</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th>Enlace</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Arquitectura</td>
+              <td>HDT_ARQ_PIM</td>
+              <td>Rev. A</td>
+              <td>2026-02-21</td>
+              <td><span class="pill"><span class="dot warn"></span>En revisión</span></td>
+              <td><a id="lnkArq" href="#" target="_blank" rel="noreferrer">Abrir</a></td>
+            </tr>
+            <tr>
+              <td>Estructuras</td>
+              <td>HDT_EST_PIM</td>
+              <td>Rev. A</td>
+              <td>2026-02-21</td>
+              <td><span class="pill"><span class="dot"></span>Publicado</span></td>
+              <td><a id="lnkEst" href="#" target="_blank" rel="noreferrer">Abrir</a></td>
+            </tr>
+            <tr>
+              <td>MEP</td>
+              <td>HDT_MEP_PIM</td>
+              <td>Rev. A</td>
+              <td>2026-02-21</td>
+              <td><span class="pill"><span class="dot warn"></span>En coordinación</span></td>
+              <td><a id="lnkMep" href="#" target="_blank" rel="noreferrer">Abrir</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Notas de gobernanza -->
+    <section class="grid three">
+      <div class="card">
+        <h2>Publicación / CDE</h2>
+        <p class="muted">
+          Define una ventana de publicación (p. ej. semanal), carpeta oficial de emisión y control de versiones.
+        </p>
+      </div>
+      <div class="card">
+        <h2>LOIN / Parámetros</h2>
+        <p class="muted">
+          Lista los parámetros mínimos por disciplina y valida completitud (auditoría).
+        </p>
+      </div>
+      <div class="card">
+        <h2>Interoperabilidad</h2>
+        <p class="muted">
+          Mantén exportaciones IFC y convenciones consistentes para trazabilidad (OpenBIM).
+        </p>
+      </div>
+    </section>
+
+    <div class="footer">
+      © 2026 · Portal HDT · Modelos BIM
+    </div>
+  </div>
+
+  <script>
+    // === CONFIGURA AQUÍ TUS ENLACES REALES ===
+    const LINKS = {
+      acc: "https://construction.autodesk.com/",          // URL a tu ACC
+      carpeta_modelos: "#",                               // URL a carpeta Modelos en ACC
+      modelo_federado: "#",                               // URL al viewer/modelo federado
+      nomenclatura: "#",                                  // URL a estándares/nomenclatura (PDF/Docs)
+      pack_arq: "#",
+      pack_est: "#",
+      pack_mep: "#",
+      modelo_arq: "#",
+      modelo_est: "#",
+      modelo_mep: "#"
+    };
+
+    // === MÉTRICAS DE SALUD (pueden ser manuales al inicio) ===
+    const HEALTH = {
+      last_pub: new Date().toISOString().slice(0,10),
+      in_review: "2",
+      issues: "18",
+      data_quality: "92%"
+    };
+
+    // Botón ACC
+    document.getElementById("btnAcc").href = LINKS.acc;
+
+    // Links superiores
+    document.getElementById("lnkFederado").href = LINKS.modelo_federado;
+    document.getElementById("lnkCdeModelos").href = LINKS.carpeta_modelos;
+    document.getElementById("lnkNomenclatura").href = LINKS.nomenclatura;
+
+    // Packs
+    document.getElementById("lnkPackArq").href = LINKS.pack_arq;
+    document.getElementById("lnkPackEst").href = LINKS.pack_est;
+    document.getElementById("lnkPackMep").href = LINKS.pack_mep;
+
+    // Tabla disciplina
+    document.getElementById("lnkArq").href = LINKS.modelo_arq;
+    document.getElementById("lnkEst").href = LINKS.modelo_est;
+    document.getElementById("lnkMep").href = LINKS.modelo_mep;
+
+    // Health
+    document.getElementById("m_last_pub").textContent = HEALTH.last_pub;
+    document.getElementById("m_in_review").textContent = HEALTH.in_review;
+    document.getElementById("m_issues").textContent = HEALTH.issues;
+    document.getElementById("m_data_quality").textContent = HEALTH.data_quality;
+  </script>
+</body>
+</html>
