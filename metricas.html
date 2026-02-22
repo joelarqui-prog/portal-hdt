@@ -20,6 +20,7 @@
       --yellow:#f59e0b;
       --red:#dc2626;
       --gray:#94a3b8;
+      --blue:#2563eb;
     }
     *{box-sizing:border-box}
     body{
@@ -98,8 +99,9 @@
     }
 
     .grid{display:grid; gap:16px; margin-top:18px;}
-    .kpis{grid-template-columns: repeat(3, minmax(0,1fr));}
-    .two{grid-template-columns: 1fr 1fr;}
+    .kpis{grid-template-columns: repeat(4, minmax(0,1fr));}
+    .two{grid-template-columns: 1.2fr .8fr;}
+
     .card{
       background:var(--card);
       border:1px solid var(--line);
@@ -109,6 +111,8 @@
     }
     h2{font-size:14px; margin:0 0 10px}
     .muted{color:var(--muted); font-size:13px}
+    .small{font-size:12px; color:var(--muted)}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
 
     .kpiCard .label{color:var(--muted); font-size:12px}
     .kpiCard .value{font-size:22px; font-weight:800; margin-top:6px}
@@ -120,16 +124,15 @@
       flex-wrap:wrap;
       align-items:center;
     }
-    input[type="search"], select, input[type="number"]{
+    select{
       padding:10px 12px;
       border:1px solid var(--line);
       border-radius:12px;
       background:#fff;
       font-size:13px;
       outline:none;
+      min-width:220px;
     }
-    input[type="search"]{min-width:260px}
-    select{min-width:220px}
 
     table{
       width:100%;
@@ -173,10 +176,21 @@
     .dot.yellow{background:var(--yellow)}
     .dot.red{background:var(--red)}
     .dot.gray{background:var(--gray)}
+    .dot.blue{background:var(--blue)}
 
-    .metaSmall{color:var(--muted); font-size:12px; margin-top:6px}
-    .actualInput{width:110px}
-    .smallSelect{min-width:180px}
+    .metaSmall{color:var(--muted); font-size:12px; margin-top:6px; line-height:1.35}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px dashed var(--line);
+      background:#fff;
+      color:var(--muted);
+      font-size:12px;
+    }
 
     .footer{
       margin:18px 0 6px;
@@ -187,11 +201,9 @@
 
     @media (max-width: 980px){
       .kpis{grid-template-columns: 1fr;}
+      .two{grid-template-columns: 1fr;}
       nav{justify-content:flex-start}
-      input[type="search"]{min-width:100%}
       select{min-width:100%}
-      .actualInput{width:100%}
-      .smallSelect{min-width:100%}
     }
   </style>
 </head>
@@ -204,12 +216,12 @@
           <div class="logo">HDT</div>
           <div class="title">
             <h1>Seguimiento de KPIs — Hospital Docente de Trujillo</h1>
-            <p>Semáforo ±10% · filtros: KPI + Fase + Disciplina</p>
+            <p>Filtros: TIPO · FASE · DISCIPLINA · Semáforo ±10% · Valor actual desde Google Sheets</p>
           </div>
         </div>
 
         <nav>
-          <span class="chip">Fase: <b>RIBA 3–4</b></span>
+          <span class="chip">Portal: <b>Diseño / Obra</b></span>
           <a class="btn secondary" href="./index.html">Inicio</a>
           <a class="btn secondary" href="./modelos.html">Modelos</a>
           <a class="btn secondary" href="./metricas.html" aria-current="page">Métricas</a>
@@ -219,51 +231,77 @@
       </div>
     </header>
 
-    <!-- Summary Cards -->
+    <!-- Summary -->
     <section class="grid kpis" id="summaryCards"></section>
 
-    <!-- Controls -->
+    <!-- Filters -->
     <section class="grid two">
       <div class="card">
-        <h2>Filtros y escenario</h2>
-        <p class="muted">Filtra por KPI (texto), Fase del proyecto y Disciplina. El escenario define la meta cuando el KPI tiene metas por entrega.</p>
+        <h2>Filtros</h2>
+        <p class="muted">Filtra KPIs por tipo, fase y disciplina. La fase determina qué meta aplica (Presentación 0/1/2/3 o Puesta en Marcha).</p>
         <div class="controls">
-          <input id="search" type="search" placeholder="Buscar KPI… (ej. KPI.10, COBie, Uniclass)" />
-
-          <select id="scenario">
-            <option value="P1">Presentación 1</option>
-            <option value="P2">Presentación 2</option>
-            <option value="P3">Presentación 3</option>
-            <option value="PM">Puesta en Marcha</option>
+          <select id="typeFilter" aria-label="Filtro tipo">
+            <option value="ALL">Todos los tipos</option>
+            <option value="PPM">PPM</option>
+            <option value="BIM">BIM</option>
+            <option value="ICE">ICE</option>
           </select>
 
-          <select id="phaseFilter">
-            <option value="ALL">Todas las fases</option>
+          <select id="phaseFilter" aria-label="Filtro fase">
+            <option value="RIBA 2">RIBA 2 (Presentación 0)</option>
+            <option value="RIBA 3" selected>RIBA 3 (Presentación 1)</option>
+            <option value="RIBA 4">RIBA 4 (Presentación 2)</option>
+            <option value="CONSTRUCCIÓN">CONSTRUCCIÓN (Presentación 3)</option>
+            <option value="PUESTA EN MARCHA">PUESTA EN MARCHA</option>
           </select>
 
-          <select id="disciplineFilter">
+          <select id="disciplineFilter" aria-label="Filtro disciplina">
             <option value="ALL">Todas las disciplinas</option>
+            <option value="ARQUITECTURA">ARQUITECTURA</option>
+            <option value="SEGURIDAD Y EVACUACIÓN">SEGURIDAD Y EVACUACIÓN</option>
+            <option value="ESTRUCTURAS">ESTRUCTURAS</option>
+            <option value="EQUIPAMIENTO MÉDICO">EQUIPAMIENTO MÉDICO</option>
+            <option value="IIEE">IIEE</option>
+            <option value="IIMM">IIMM</option>
+            <option value="IISS">IISS</option>
+            <option value="COMUNICACIONES">COMUNICACIONES</option>
           </select>
 
           <button class="btn secondary" id="btnClear" type="button">Limpiar</button>
+          <button class="btn" id="btnReload" type="button">Actualizar datos</button>
         </div>
 
         <div style="height:10px"></div>
-        <div class="muted">
-          Mostrando: <b id="shownCount">0</b> / <b id="totalCount">0</b> KPIs
+
+        <div class="row">
+          <span class="pill" id="dataStatus">
+            <span class="dot blue"></span>
+            Cargando datos desde Google Sheets…
+          </span>
+          <span class="pill">
+            Umbrales: <b>Verde ≥ Meta</b> · <b>Amarillo ≥ Meta−10%</b> · <b>Rojo &lt; Meta−10%</b>
+          </span>
         </div>
-        <div class="metaSmall">
-          Umbrales (mayor es mejor): <b>Verde ≥ Meta</b> · <b>Amarillo ≥ Meta−10%</b> · <b>Rojo &lt; Meta−10%</b>
+
+        <div class="small" style="margin-top:10px">
+          Nota: En RIBA 2 no se aplican KPI.07–KPI.11 (madurez 4D/5D/5D/Clasificación/COBie) por alcance y rapidez de validación PMA/diseño.
         </div>
       </div>
 
       <div class="card">
-        <h2>Cómo usar</h2>
-        <ul class="muted" style="margin:0; padding-left:18px">
-          <li>Asigna <b>Fase</b> y <b>Disciplina</b> por KPI (en la tabla).</li>
-          <li>Ingresa el <b>Valor actual</b> para ver el semáforo.</li>
-          <li>Todo se guarda localmente en el navegador.</li>
-        </ul>
+        <h2>Fuente de datos</h2>
+        <p class="muted" style="margin:0 0 10px">
+          La columna <b>Valor actual</b> se alimenta desde una hoja de Google Sheets publicada como CSV.
+          Disciplina vacía en el sheet se interpreta como <b>“TODAS”</b>.
+        </p>
+        <div class="small">
+          Columnas esperadas (mínimo):<br/>
+          <b>kpi_codigo</b>, <b>fase</b>, <b>disciplina</b>, <b>valor_actual</b><br/>
+          (opcional: <b>fecha</b>)
+        </div>
+        <div class="small" style="margin-top:10px">
+          Recomendación: una fila por combinación KPI+Fase+Disciplina (o disciplina vacía para “todas”).
+        </div>
       </div>
     </section>
 
@@ -277,18 +315,17 @@
               <th>Tipo</th>
               <th>Código</th>
               <th>Indicador</th>
-
               <th>Fase</th>
               <th>Disciplina</th>
-
-              <th>Meta (según escenario)</th>
-              <th>Valor actual</th>
+              <th>Meta</th>
+              <th>Valor actual (Sheets)</th>
               <th>Resultado</th>
               <th>Responsable</th>
             </tr>
           </thead>
           <tbody id="kpiBody"></tbody>
         </table>
+        <div class="small" id="note" style="margin-top:10px"></div>
       </div>
     </section>
 
@@ -296,43 +333,104 @@
   </div>
 
   <script>
-    // === CONFIGURA TU ENLACE ACC (si quieres) ===
-    const LINKS = { acc: "https://construction.autodesk.com/" };
-    document.getElementById("btnAcc").href = LINKS.acc;
+    // =========================
+    // CONFIGURACIÓN
+    // =========================
 
-    // === LISTAS (según tu estructura) ===
-    const PHASES = ["RIBA 2","RIBA 3","RIBA 4","CONSTRUCCIÓN","PUESTA EN MARCHA"];
-    const DISCIPLINES = [
-      "ARQUITECTURA",
-      "SEGURIDAD Y EVACUACIÓN",
-      "ESTRUCTURAS",
-      "EQUIPAMIENTO MÉDICO",
-      "IIEE",
-      "IIMM",
-      "IISS",
-      "COMUNICACIONES"
-    ];
+    // 1) Pega aquí tu URL CSV publicada de Google Sheets (Archivo → Compartir → Publicar en la web → CSV)
+    // Debe verse algo como: https://docs.google.com/spreadsheets/d/e/.../pub?output=csv
+    const GOOGLE_SHEET_CSV_URL = "PEGA_AQUI_TU_URL_CSV";
 
-    // === KPIs (tus metas) ===
+    // 2) Enlace ACC (opcional)
+    const ACC_URL = "https://construction.autodesk.com/";
+    document.getElementById("btnAcc").href = ACC_URL;
+
+    // =========================
+    // DEFINICIÓN DE KPIs (base)
+    // =========================
+
     const KPIS = [
-      { tipo: "MÉTRICAS PPM", codigo: "KPI.01", indicador: "Incidencias resueltas.", meta: "KPI.01 = 75% mínimo por paquete para Presentación 1.\nKPI.01 = 85% mínimo por paquete para Presentación 2.\nKPI.01 = 95% mínimo por paquete para Presentación 3.\nKPI.01 = 100% para fase Puesta en Marcha.", responsable: "Contratista" },
-      { tipo: "MÉTRICAS PPM", codigo: "KPI.02", indicador: "Incidencias de alto y mediano impacto resueltas.", meta: "KPI.02 = 75% mínimo por paquete para Presentación 1.\nKPI.02 = 85% mínimo por paquete para Presentación 2.\nKPI.02 = 55% mínimo por paquete para Presentación 3.\nKPI.02 = 100% para fase Puesta en Marcha.", responsable: "Contratista" },
-      { tipo: "MÉTRICAS PPM", codigo: "KPI.03", indicador: "Incidencias por especialidad.", meta: "KPI.03 = >% por especialidad.", responsable: "Contratista" },
+      // PPM
+      { tipo: "PPM", codigo: "KPI.01", indicador: "Incidencias resueltas.", metaText:
+        "KPI.01 = 75% mínimo por paquete para Presentación 1.\n" +
+        "KPI.01 = 85% mínimo por paquete para Presentación 2.\n" +
+        "KPI.01 = 95% mínimo por paquete para Presentación 3.\n" +
+        "KPI.01 = 100% para fase Puesta en Marcha.", responsable: "Contratista" },
 
-      { tipo: "MÉTRICAS BIM", codigo: "KPI.04", indicador: "Modelos validados y aceptados.", meta: "KPI.04 = 100% por cada entrega de Presentación.", responsable: "Supervisor / Gerente de Proyecto" },
-      { tipo: "MÉTRICAS BIM", codigo: "KPI.05", indicador: "Modelos compatibilizados.", meta: "KPI.05 = 100% por cada entrega de Presentación.", responsable: "Contratista / Supervisor" },
-      { tipo: "MÉTRICAS BIM", codigo: "KPI.06", indicador: "Planos desde el modelo.", meta: "KPI.06 = > 80% por cada entrega de Presentación.", responsable: "Contratista" },
-      { tipo: "MÉTRICAS BIM", codigo: "KPI.07", indicador: "Parámetros en modelo 4D.", meta: "KPI.07 = > 70% mínimo por paquete para Presentación 1.\nKPI.07 = 100% por paquete para Presentación 2.", responsable: "Contratista" },
-      { tipo: "MÉTRICAS BIM", codigo: "KPI.08", indicador: "Parámetros en modelo 5D.", meta: "KPI.07 = > 70% mínimo por paquete para Presentación 1.\nKPI.07 = 100% por paquete para Presentación 2.", responsable: "Contratista" },
-      { tipo: "MÉTRICAS BIM", codigo: "KPI.09", indicador: "Metrados desde modelo.", meta: "KPI.09 = > 75% por cada entrega de Presentación.", responsable: "Contratista" },
-      { tipo: "MÉTRICAS BIM", codigo: "KPI.10", indicador: "Data Uniclass en modelos.", meta: "KPI.10 = > 70% mínimo por paquete para Presentación 1.\nKPI.10 = 100% por paquete para Presentación 2.\nKPI.10 = 100% por paquete para Presentación 3.\nKPI.10 = 100% por paquete para Puesta en Marcha.", responsable: "Contratista" },
-      { tipo: "MÉTRICAS BIM", codigo: "KPI.11", indicador: "Data COBie en modeloss.", meta: "KPI.11 = > 50% mínimo por paquete para Presentación 1.\nKPI.11 = 80% mínimo por paquete para Presentación 2.\nKPI.11 = 100% por paquete para Presentación 3.\nKPI.11 = 100% por paquete para Puesta en Marcha.", responsable: "Contratista / Supervisor" },
+      { tipo: "PPM", codigo: "KPI.02", indicador: "Incidencias de alto y mediano impacto resueltas.", metaText:
+        "KPI.02 = 75% mínimo por paquete para Presentación 1.\n" +
+        "KPI.02 = 85% mínimo por paquete para Presentación 2.\n" +
+        "KPI.02 = 55% mínimo por paquete para Presentación 3.\n" +
+        "KPI.02 = 100% para fase Puesta en Marcha.", responsable: "Contratista" },
 
-      { tipo: "MÉTRICAS ICE", codigo: "KPI.12", indicador: "Participación en sesiones.", meta: "KPI.12 = 1", responsable: "Contratista / Supervisor" }
+      { tipo: "PPM", codigo: "KPI.03", indicador: "Incidencias por especialidad (línea base / diagnóstico).", metaText:
+        "KPI.03 = Línea base por disciplina (no meta porcentual fija).", responsable: "Contratista" },
+
+      // BIM
+      { tipo: "BIM", codigo: "KPI.04", indicador: "Modelos validados y aceptados.", metaText:
+        "KPI.04 = 100% por cada entrega de Presentación.", responsable: "Supervisor / Gerente de Proyecto" },
+
+      { tipo: "BIM", codigo: "KPI.05", indicador: "Modelos compatibilizados.", metaText:
+        "KPI.05 = 100% por cada entrega de Presentación.", responsable: "Contratista / Supervisor" },
+
+      { tipo: "BIM", codigo: "KPI.06", indicador: "Planos desde el modelo.", metaText:
+        "KPI.06 = > 80% por cada entrega de Presentación.", responsable: "Contratista" },
+
+      { tipo: "BIM", codigo: "KPI.07", indicador: "Parámetros en modelo 4D.", metaText:
+        "KPI.07 = > 70% mínimo por paquete para Presentación 1.\n" +
+        "KPI.07 = 100% por paquete para Presentación 2.", responsable: "Contratista" },
+
+      { tipo: "BIM", codigo: "KPI.08", indicador: "Parámetros en modelo 5D.", metaText:
+        "KPI.08 = > 70% mínimo por paquete para Presentación 1.\n" +
+        "KPI.08 = 100% por paquete para Presentación 2.", responsable: "Contratista" },
+
+      { tipo: "BIM", codigo: "KPI.09", indicador: "Metrados desde modelo.", metaText:
+        "KPI.09 = > 75% por cada entrega de Presentación.", responsable: "Contratista" },
+
+      { tipo: "BIM", codigo: "KPI.10", indicador: "Data Uniclass en modelos.", metaText:
+        "KPI.10 = > 70% mínimo por paquete para Presentación 1.\n" +
+        "KPI.10 = 100% por paquete para Presentación 2.\n" +
+        "KPI.10 = 100% por paquete para Presentación 3.\n" +
+        "KPI.10 = 100% por paquete para Puesta en Marcha.", responsable: "Contratista" },
+
+      { tipo: "BIM", codigo: "KPI.11", indicador: "Data COBie en modelos.", metaText:
+        "KPI.11 = > 50% mínimo por paquete para Presentación 1.\n" +
+        "KPI.11 = 80% mínimo por paquete para Presentación 2.\n" +
+        "KPI.11 = 100% por paquete para Presentación 3.\n" +
+        "KPI.11 = 100% por paquete para Puesta en Marcha.", responsable: "Contratista / Supervisor" },
+
+      // ICE
+      { tipo: "ICE", codigo: "KPI.12", indicador: "Participación en sesiones.", metaText:
+        "KPI.12 = 1", responsable: "Contratista / Supervisor" }
     ];
 
-    // ---------------- Helpers ----------------
-    const norm = (s) => (s ?? "").toString().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
+    // =========================
+    // METAS PROPUESTAS RIBA 2 (Presentación 0)
+    // Solo KPIs aplicables en RIBA 2.
+    // =========================
+    const RIBA2_TARGETS = {
+      "KPI.01": 50, // %
+      "KPI.02": 60, // %
+      // KPI.03: diagnóstico, sin semáforo
+      "KPI.04": 70, // % validación conceptual (arquitectura)
+      "KPI.05": 50, // % compatibilidad técnica preliminar
+      "KPI.06": 40, // % planos/entregables desde modelo arquitectura
+      "KPI.12": 80  // % asistencia equipo clave (propuesta)
+    };
+
+    // En RIBA 2 NO APLICA (por decisión)
+    const NOT_APPLICABLE_RIBA2 = new Set(["KPI.07","KPI.08","KPI.09","KPI.10","KPI.11"]);
+
+    // =========================
+    // UTILIDADES
+    // =========================
+
+    const $ = (id) => document.getElementById(id);
+
+    const norm = (s) =>
+      (s ?? "").toString().trim().toUpperCase()
+        .normalize("NFD").replace(/\p{Diacritic}/gu,"");
+
     const escapeHtml = (s) =>
       (s ?? "").toString()
         .replaceAll("&","&amp;")
@@ -340,230 +438,410 @@
         .replaceAll(">","&gt;")
         .replaceAll('"',"&quot;")
         .replaceAll("'","&#039;");
+
     const toMultilineHtml = (s) => escapeHtml(s).replaceAll("\n","<br/>");
 
-    const firstNumber = (text) => {
+    function firstNumber(text){
       const m = (text ?? "").toString().match(/(\d+(?:[.,]\d+)?)/);
       if(!m) return null;
       return parseFloat(m[1].replace(",", "."));
-    };
+    }
 
-    function targetFromMetaText(metaText, scenario){
+    // Mapea fase a "selector de meta" (P0/P1/P2/P3/PM)
+    function phaseToTargetKey(phase){
+      switch(norm(phase)){
+        case "RIBA 2": return "P0";
+        case "RIBA 3": return "P1";
+        case "RIBA 4": return "P2";
+        case "CONSTRUCCION":
+        case "CONSTRUCCIÓN": return "P3";
+        case "PUESTA EN MARCHA": return "PM";
+        default: return "P1";
+      }
+    }
+
+    // Extrae meta por "Presentación X" / "Puesta en Marcha" desde texto
+    function targetFromMetaText(metaText, targetKey){
       const t = (metaText ?? "").toString();
-      const needle =
-        scenario === "P1" ? "Presentación 1" :
-        scenario === "P2" ? "Presentación 2" :
-        scenario === "P3" ? "Presentación 3" :
-        "Puesta en Marcha";
-
       const lines = t.split("\n").map(x => x.trim()).filter(Boolean);
-      const line = lines.find(l => norm(l).includes(norm(needle)));
 
-      if(line) return firstNumber(line);
-
-      if(norm(t).includes("por cada entrega")){
-        return firstNumber(t);
+      if(targetKey === "PM"){
+        const line = lines.find(l => norm(l).includes("PUESTA EN MARCHA"));
+        return line ? firstNumber(line) : null;
       }
 
-      return firstNumber(t);
+      // P1/P2/P3: buscar "Presentación N"
+      const pres =
+        targetKey === "P1" ? "PRESENTACION 1" :
+        targetKey === "P2" ? "PRESENTACION 2" :
+        "PRESENTACION 3";
+
+      const line = lines.find(l => norm(l).includes(pres));
+      if(line) return firstNumber(line);
+
+      // "por cada entrega de Presentación" -> usa el primer número del texto (si existe)
+      if(norm(t).includes("POR CADA ENTREGA")) return firstNumber(t);
+
+      return null;
     }
 
+    // Semáforo ±10% (mayor es mejor)
     function computeStatus(actual, target){
-      if(target == null || isNaN(target)) return { key:"NA", label:"Sin meta", cls:"gray" };
-      if(actual == null || isNaN(actual)) return { key:"ND", label:"Sin dato", cls:"gray" };
+      if(target == null || isNaN(target)) return { cls:"gray", label:"Sin meta" };
+      if(actual == null || isNaN(actual)) return { cls:"gray", label:"Sin dato" };
 
-      const yellowMin = target * 0.90; // Meta - 10%
-      if(actual >= target) return { key:"GREEN", label:"Objetivo / Saludable", cls:"green" };
-      if(actual >= yellowMin) return { key:"YELLOW", label:"En riesgo / Advertencia", cls:"yellow" };
-      return { key:"RED", label:"Crítico", cls:"red" };
+      const yellowMin = target * 0.90;
+      if(actual >= target) return { cls:"green", label:"Objetivo / Saludable" };
+      if(actual >= yellowMin) return { cls:"yellow", label:"En riesgo / Advertencia" };
+      return { cls:"red", label:"Crítico" };
     }
 
-    // ---------------- Persistencia ----------------
-    const STORAGE_ACTUALS = "portal_hdt_kpi_actuals_v3";
-    const STORAGE_ASSIGN = "portal_hdt_kpi_assign_phase_disc_v1";
-
-    function loadMap(key){ try{ return JSON.parse(localStorage.getItem(key) || "{}"); }catch{ return {}; } }
-    function saveMap(key, map){ localStorage.setItem(key, JSON.stringify(map)); }
-
-    const ACTUALS = loadMap(STORAGE_ACTUALS);
-    const ASSIGN = loadMap(STORAGE_ASSIGN);
-
-    function getAssign(code){
-      return ASSIGN[code] || { phase: "RIBA 3", discipline: "ARQUITECTURA" };
-    }
-    function setAssign(code, patch){
-      const cur = getAssign(code);
-      ASSIGN[code] = { ...cur, ...patch };
-      saveMap(STORAGE_ASSIGN, ASSIGN);
+    function formatValue(v){
+      if(v == null || isNaN(v)) return "—";
+      // muestra 2 decimales solo si hace falta
+      const s = Number(v);
+      return (Math.round(s*100) % 100 === 0) ? String(s) : s.toFixed(2);
     }
 
-    // ---------------- Filters: build dropdowns ----------------
-    const phaseFilter = document.getElementById("phaseFilter");
-    PHASES.forEach(p => {
-      const opt = document.createElement("option");
-      opt.value = p; opt.textContent = p;
-      phaseFilter.appendChild(opt);
-    });
+    // =========================
+    // LECTURA GOOGLE SHEETS (CSV)
+    // =========================
 
-    const disciplineFilter = document.getElementById("disciplineFilter");
-    DISCIPLINES.forEach(d => {
-      const opt = document.createElement("option");
-      opt.value = d; opt.textContent = d;
-      disciplineFilter.appendChild(opt);
-    });
+    // CSV parser simple (maneja comillas)
+    function parseCSV(text){
+      const rows = [];
+      let row = [];
+      let cur = "";
+      let inQuotes = false;
 
-    document.getElementById("totalCount").textContent = KPIS.length.toString();
+      for(let i=0;i<text.length;i++){
+        const ch = text[i];
+        const next = text[i+1];
 
-    // ---------------- Summary cards (por tipo original) ----------------
+        if(ch === '"' && inQuotes && next === '"'){
+          cur += '"';
+          i++;
+        } else if(ch === '"'){
+          inQuotes = !inQuotes;
+        } else if(ch === ',' && !inQuotes){
+          row.push(cur);
+          cur = "";
+        } else if((ch === '\n' || ch === '\r') && !inQuotes){
+          if(ch === '\r' && next === '\n') i++;
+          row.push(cur);
+          cur = "";
+          // evitar filas vacías
+          if(row.some(c => c.trim() !== "")) rows.push(row);
+          row = [];
+        } else {
+          cur += ch;
+        }
+      }
+      row.push(cur);
+      if(row.some(c => c.trim() !== "")) rows.push(row);
+      return rows;
+    }
+
+    // Mapa de valores: key = kpi|fase|disc (disc puede ser "" => TODAS)
+    // Ej: "KPI.01|RIBA 3|ARQUITECTURA" => {valor, fecha?}
+    let SHEET_MAP = new Map();
+    let SHEET_LOADED = false;
+    let SHEET_LAST_UPDATED = null;
+
+    function buildSheetKey(kpi, fase, disc){
+      const k = norm(kpi);
+      const f = norm(fase);
+      const d = norm(disc || ""); // vacío = TODAS
+      return `${k}|${f}|${d}`;
+    }
+
+    function getActualFromSheet(kpi, fase, disc){
+      // 1) exacto
+      const keyExact = buildSheetKey(kpi, fase, disc);
+      if(SHEET_MAP.has(keyExact)) return SHEET_MAP.get(keyExact);
+
+      // 2) disciplina vacía (TODAS)
+      const keyAll = buildSheetKey(kpi, fase, "");
+      if(SHEET_MAP.has(keyAll)) return SHEET_MAP.get(keyAll);
+
+      return null;
+    }
+
+    async function loadSheet(){
+      SHEET_LOADED = false;
+      SHEET_MAP = new Map();
+      SHEET_LAST_UPDATED = null;
+
+      const status = $("dataStatus");
+      status.innerHTML = `<span class="dot blue"></span> Cargando datos desde Google Sheets…`;
+
+      if(!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL.includes("PEGA_AQUI_TU_URL_CSV")){
+        status.innerHTML = `<span class="dot yellow"></span> Falta configurar la URL CSV del Google Sheet.`;
+        $("note").textContent = "Configura GOOGLE_SHEET_CSV_URL en el archivo metricas.html para activar la carga automática de Valor actual.";
+        return;
+      }
+
+      try{
+        const res = await fetch(GOOGLE_SHEET_CSV_URL, { cache: "no-store" });
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
+        const text = await res.text();
+        const rows = parseCSV(text);
+        if(rows.length < 2) throw new Error("CSV sin datos");
+
+        // headers
+        const headers = rows[0].map(h => norm(h));
+        const idx = (name) => headers.indexOf(norm(name));
+
+        const iKpi = idx("kpi_codigo");
+        const iFase = idx("fase");
+        const iDisc = idx("disciplina");
+        const iVal  = idx("valor_actual");
+        const iDate = idx("fecha"); // opcional
+
+        if(iKpi === -1 || iFase === -1 || iVal === -1){
+          throw new Error("El CSV debe incluir: kpi_codigo, fase, valor_actual (disciplina opcional).");
+        }
+
+        for(let r=1; r<rows.length; r++){
+          const row = rows[r];
+          const kpi = row[iKpi] ?? "";
+          const fase = row[iFase] ?? "";
+          const disc = (iDisc === -1) ? "" : (row[iDisc] ?? "");
+          const rawVal = row[iVal] ?? "";
+
+          const val = rawVal === "" ? null : parseFloat(String(rawVal).replace(",", "."));
+          const date = (iDate === -1) ? "" : (row[iDate] ?? "");
+
+          if(!kpi || !fase) continue;
+          const key = buildSheetKey(kpi, fase, disc);
+          SHEET_MAP.set(key, { valor: val, fecha: date, discRaw: disc });
+        }
+
+        SHEET_LOADED = true;
+        SHEET_LAST_UPDATED = new Date();
+
+        status.innerHTML = `<span class="dot green"></span> Datos cargados desde Google Sheets.`;
+        $("note").textContent = "";
+
+        applyFiltersAndRender();
+
+      }catch(err){
+        status.innerHTML = `<span class="dot red"></span> Error cargando datos (revisa URL CSV y permisos).`;
+        $("note").textContent = `Detalle: ${err?.message ?? err}`;
+      }
+    }
+
+    // =========================
+    // LÓGICA DE META POR FASE
+    // =========================
+    function getTargetFor(kpiCode, phase, metaText){
+      const key = phaseToTargetKey(phase);
+
+      // RIBA 2 (P0): usar metas propuestas SOLO para KPIs aplicables
+      if(key === "P0"){
+        if(NOT_APPLICABLE_RIBA2.has(kpiCode)) return { target: null, mode: "NA", note: "No aplica en RIBA 2" };
+        if(kpiCode === "KPI.03") return { target: null, mode: "DIAG", note: "Diagnóstico (sin meta fija)" };
+
+        const t = RIBA2_TARGETS[kpiCode];
+        if(t == null) return { target: null, mode: "NA", note: "Sin meta definida en RIBA 2" };
+        return { target: t, mode: "NUM", note: "Meta propuesta RIBA 2" };
+      }
+
+      // PM: buscar línea "Puesta en Marcha"
+      if(key === "PM"){
+        const t = targetFromMetaText(metaText, "PM");
+        return { target: t, mode: (t==null? "NA":"NUM"), note: t==null ? "Sin meta Puesta en Marcha" : "Meta Puesta en Marcha" };
+      }
+
+      // Construcción usa Presentación 3 (Opción B); RIBA3->P1, RIBA4->P2
+      const t = targetFromMetaText(metaText, key); // P1/P2/P3
+      return { target: t, mode: (t==null? "NA":"NUM"), note: t==null ? "Sin meta para esta fase" : "Meta por Presentación" };
+    }
+
+    // =========================
+    // RENDER
+    // =========================
+
     function renderSummaryCards(items){
-      const container = document.getElementById("summaryCards");
+      const container = $("summaryCards");
       container.innerHTML = "";
-      const types = [...new Set(KPIS.map(k => k.tipo))].sort();
 
-      const countByType = items.reduce((acc, k) => {
-        acc[k.tipo] = (acc[k.tipo] || 0) + 1;
-        return acc;
-      }, {});
+      const total = items.length;
+      const byType = { PPM:0, BIM:0, ICE:0 };
+      const byStatus = { green:0, yellow:0, red:0, gray:0 };
 
-      types.forEach(t => {
-        const n = countByType[t] || 0;
-        const card = document.createElement("div");
-        card.className = "card kpiCard";
-        card.innerHTML = `
-          <div class="label">${escapeHtml(t)}</div>
-          <div class="value">${n}</div>
-          <div class="sub">KPIs en este grupo</div>
+      for(const it of items){
+        byType[it.tipo] = (byType[it.tipo] || 0) + 1;
+        byStatus[it.status.cls] = (byStatus[it.status.cls] || 0) + 1;
+      }
+
+      const cards = [
+        { label:"KPIs (filtrados)", value: total, sub:"Resultados según filtros" },
+        { label:"PPM · BIM · ICE", value: `${byType.PPM}/${byType.BIM}/${byType.ICE}`, sub:"Distribución por tipo" },
+        { label:"Verde", value: byStatus.green, sub:"Objetivo / Saludable" },
+        { label:"Amarillo+Rojo", value: (byStatus.yellow + byStatus.red), sub:"Riesgo + Crítico" }
+      ];
+
+      for(const c of cards){
+        const div = document.createElement("div");
+        div.className = "card kpiCard";
+        div.innerHTML = `
+          <div class="label">${escapeHtml(c.label)}</div>
+          <div class="value">${escapeHtml(String(c.value))}</div>
+          <div class="sub">${escapeHtml(c.sub)}</div>
         `;
-        container.appendChild(card);
-      });
+        container.appendChild(div);
+      }
     }
 
-    // ---------------- Table ----------------
-    function makeSelect(options, value, dataKey, code){
-      const opts = options.map(o => `<option value="${escapeHtml(o)}"${o===value?" selected":""}>${escapeHtml(o)}</option>`).join("");
-      return `<select class="smallSelect" data-assign="${escapeHtml(code)}" data-key="${escapeHtml(dataKey)}">${opts}</select>`;
-    }
-
-    function renderTable(items){
-      const body = document.getElementById("kpiBody");
+    function renderTable(rows){
+      const body = $("kpiBody");
       body.innerHTML = "";
 
-      const scenario = document.getElementById("scenario").value;
+      for(const r of rows){
+        const metaLabel = (r.targetInfo.mode === "NUM" && r.targetInfo.target != null)
+          ? `${formatValue(r.targetInfo.target)}%`
+          : (r.targetInfo.mode === "DIAG")
+            ? "Diagnóstico"
+            : "—";
 
-      items.forEach(k => {
-        const a = getAssign(k.codigo);
+        const actualLabel = (r.actual && r.actual.valor != null && !isNaN(r.actual.valor))
+          ? formatValue(r.actual.valor)
+          : "—";
 
-        const target = targetFromMetaText(k.meta, scenario);
-        const actual = ACTUALS[k.codigo] != null ? parseFloat(ACTUALS[k.codigo]) : null;
-        const st = computeStatus(actual, target);
-
-        const targetLabel = (target == null || isNaN(target)) ? "—" : `${target}${k.meta.includes("%") ? "%" : ""}`;
+        const statusLabel = r.status.label;
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td><span class="tag">${escapeHtml(k.tipo)}</span></td>
-          <td><b>${escapeHtml(k.codigo)}</b></td>
-          <td>${escapeHtml(k.indicador)}</td>
-
-          <td>${makeSelect(PHASES, a.phase, "phase", k.codigo)}</td>
-          <td>${makeSelect(DISCIPLINES, a.discipline, "discipline", k.codigo)}</td>
-
+          <td><span class="tag">${escapeHtml(r.tipo)}</span></td>
+          <td><b>${escapeHtml(r.codigo)}</b></td>
           <td>
-            <div><b>${escapeHtml(targetLabel)}</b></div>
-            <div class="metaSmall">${toMultilineHtml(k.meta)}</div>
+            ${escapeHtml(r.indicador)}
+            <div class="metaSmall">${toMultilineHtml(r.metaText)}</div>
           </td>
-
+          <td>${escapeHtml(r.phase)}</td>
+          <td>${escapeHtml(r.discipline)}</td>
           <td>
-            <input
-              class="actualInput"
-              type="number"
-              step="0.01"
-              inputmode="decimal"
-              placeholder="Ej: 85"
-              value="${actual == null || isNaN(actual) ? "" : actual}"
-              data-kpi="${escapeHtml(k.codigo)}"
-              aria-label="Valor actual ${escapeHtml(k.codigo)}"
-            />
+            <div><b>${escapeHtml(metaLabel)}</b></div>
+            <div class="metaSmall">${escapeHtml(r.targetInfo.note)}</div>
           </td>
-
+          <td>
+            <div><b>${escapeHtml(actualLabel)}</b></div>
+            <div class="metaSmall">${r.actual?.fecha ? ("Fecha: " + escapeHtml(r.actual.fecha)) : ""}</div>
+          </td>
           <td>
             <span class="status">
-              <span class="dot ${st.cls}"></span>
-              ${escapeHtml(st.label)}
+              <span class="dot ${escapeHtml(r.status.cls)}"></span>
+              ${escapeHtml(statusLabel)}
             </span>
           </td>
-
-          <td>${escapeHtml(k.responsable)}</td>
+          <td>${escapeHtml(r.responsable)}</td>
         `;
         body.appendChild(tr);
-      });
-
-      // Inputs: Valor actual
-      body.querySelectorAll("input[data-kpi]").forEach(inp => {
-        inp.addEventListener("input", (e) => {
-          const code = e.target.getAttribute("data-kpi");
-          const v = e.target.value;
-          if(v === "") delete ACTUALS[code];
-          else ACTUALS[code] = v;
-          saveMap(STORAGE_ACTUALS, ACTUALS);
-          applyFilters();
-        });
-      });
-
-      // Asignación: Fase / Disciplina
-      body.querySelectorAll("select[data-assign][data-key]").forEach(sel => {
-        sel.addEventListener("change", (e) => {
-          const code = e.target.getAttribute("data-assign");
-          const key = e.target.getAttribute("data-key");
-          setAssign(code, { [key]: e.target.value });
-          applyFilters();
-        });
-      });
-
-      document.getElementById("shownCount").textContent = items.length.toString();
+      }
     }
 
-    // ---------------- Filters ----------------
-    function applyFilters(){
-      const q = norm(document.getElementById("search").value);
-      const phase = document.getElementById("phaseFilter").value;
-      const disc = document.getElementById("disciplineFilter").value;
+    // =========================
+    // FILTROS
+    // =========================
 
-      const filtered = KPIS.filter(k => {
-        const a = getAssign(k.codigo);
+    function applyFiltersAndRender(){
+      const type = $("typeFilter").value;
+      const phase = $("phaseFilter").value;
+      const disc = $("disciplineFilter").value;
 
-        if(phase !== "ALL" && a.phase !== phase) return false;
-        if(disc !== "ALL" && a.discipline !== disc) return false;
+      // Construir lista evaluada (1 fila por KPI) según filtros
+      const evaluated = KPIS
+        .filter(k => (type === "ALL" ? true : k.tipo === type))
+        .map(k => {
+          const disciplineUsed = (disc === "ALL") ? "TODAS" : disc;
 
-        if(q){
-          const blob = norm([k.codigo, k.indicador, k.meta, k.responsable, a.phase, a.discipline].join(" "));
-          if(!blob.includes(q)) return false;
-        }
+          // Meta según fase
+          const targetInfo = getTargetFor(k.codigo, phase, k.metaText);
 
-        return true;
-      });
+          // Actual desde sheets (si hay)
+          // Disciplina vacía en sheet = TODAS (fallback)
+          const actual = (disc === "ALL")
+            ? getActualFromSheet(k.codigo, phase, "") || null // para "todas", prioriza agregado (disc vacía)
+            : getActualFromSheet(k.codigo, phase, disc) || null;
+
+          // KPI.03 (diagnóstico): estado azul/gris según dato
+          let status;
+          if(targetInfo.mode === "DIAG"){
+            // Si hay dato, lo marcamos informativo (azul), si no, gris
+            status = (actual && actual.valor != null && !isNaN(actual.valor))
+              ? { cls:"blue", label:"Informativo (diagnóstico)" }
+              : { cls:"gray", label:"Sin dato (diagnóstico)" };
+          } else if(targetInfo.mode === "NA"){
+            status = { cls:"gray", label:"No aplica / Sin meta" };
+          } else {
+            status = computeStatus(actual?.valor ?? null, targetInfo.target);
+          }
+
+          return {
+            ...k,
+            phase,
+            discipline: disciplineUsed,
+            targetInfo,
+            actual,
+            status
+          };
+        });
+
+      // Filtrado por disciplina (comportamiento útil):
+      // - Si disciplina = ALL: no reducimos.
+      // - Si disciplina != ALL y sheet ya cargó:
+      //   mostramos solo KPIs que tengan dato para esa disciplina (exacto o TODAS),
+      //   o los que sean "No aplica" en esa fase (para que se vea el alcance).
+      let filtered = evaluated;
+
+      if(disc !== "ALL" && SHEET_LOADED){
+        filtered = evaluated.filter(r => {
+          const hasData = !!(r.actual && r.actual.valor != null && !isNaN(r.actual.valor));
+          const isNA = (r.targetInfo.mode === "NA");
+          // mostrar si tiene dato o si es NA (para transparencia del alcance)
+          return hasData || isNA || (r.codigo === "KPI.03"); // KPI.03 siempre visible si existe
+        });
+      }
 
       renderSummaryCards(filtered);
       renderTable(filtered);
+
+      // Nota de contexto
+      const n = $("note");
+      const tkey = phaseToTargetKey(phase);
+      const presLabel =
+        tkey === "P0" ? "Presentación 0 (RIBA 2) — metas propuestas" :
+        tkey === "P1" ? "Presentación 1 (RIBA 3)" :
+        tkey === "P2" ? "Presentación 2 (RIBA 4)" :
+        tkey === "P3" ? "Presentación 3 (CONSTRUCCIÓN)" :
+        "Puesta en Marcha";
+
+      n.textContent = `Meta activa: ${presLabel}. Disciplina en Sheets vacía = TODAS.`;
     }
 
-    // Init
-    renderSummaryCards(KPIS);
-    renderTable(KPIS);
+    // =========================
+    // EVENTOS
+    // =========================
 
-    // Events
-    document.getElementById("search").addEventListener("input", applyFilters);
-    document.getElementById("scenario").addEventListener("change", applyFilters);
-    document.getElementById("phaseFilter").addEventListener("change", applyFilters);
-    document.getElementById("disciplineFilter").addEventListener("change", applyFilters);
+    $("typeFilter").addEventListener("change", applyFiltersAndRender);
+    $("phaseFilter").addEventListener("change", applyFiltersAndRender);
+    $("disciplineFilter").addEventListener("change", applyFiltersAndRender);
 
-    document.getElementById("btnClear").addEventListener("click", () => {
-      document.getElementById("search").value = "";
-      document.getElementById("scenario").value = "P1";
-      document.getElementById("phaseFilter").value = "ALL";
-      document.getElementById("disciplineFilter").value = "ALL";
-      applyFilters();
+    $("btnClear").addEventListener("click", () => {
+      $("typeFilter").value = "ALL";
+      $("phaseFilter").value = "RIBA 3";
+      $("disciplineFilter").value = "ALL";
+      applyFiltersAndRender();
     });
+
+    $("btnReload").addEventListener("click", loadSheet);
+
+    // =========================
+    // INIT
+    // =========================
+    applyFiltersAndRender();
+    loadSheet();
   </script>
 </body>
 </html>
