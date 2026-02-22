@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Métricas & KPIs – Portal HDT</title>
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --primary:#0066cc;
+      --line:#e2e8f0;
+      --shadow: 0 10px 25px rgba(2,6,23,.08);
+      --radius:14px;
+      --max:1200px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      color:var(--text);
+      background:linear-gradient(180deg,#ffffff 0%, var(--bg) 35%, var(--bg) 100%);
+    }
+    a{color:var(--primary); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:var(--max); margin:0 auto; padding:22px}
+    header{
+      background:rgba(255,255,255,.75);
+      backdrop-filter: blur(10px);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow: var(--shadow);
+      padding:18px 18px 14px;
+    }
+    .top{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-width:260px;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:12px;
+      background:linear-gradient(135deg,var(--primary),#1d4ed8);
+      display:grid;place-items:center;
+      color:#fff;font-weight:800;
+      letter-spacing:.5px;
+    }
+    .title h1{margin:0; font-size:18px; line-height:1.2}
+    .title p{margin:4px 0 0; color:var(--muted); font-size:13px}
+
+    nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:center;
+    }
+    .chip{
+      display:inline-flex; gap:8px; align-items:center;
+      border:1px solid var(--line);
+      background:#fff;
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:13px;
+      color:var(--text);
+    }
+    .chip b{font-weight:700}
+    .btn{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:var(--primary);
+      color:#fff;
+      border:1px solid rgba(0,0,0,.05);
+      font-weight:700;
+      font-size:13px;
+      box-shadow: 0 10px 18px rgba(0,102,204,.18);
+    }
+    .btn.secondary{
+      background:#fff;
+      color:var(--text);
+      box-shadow:none;
+      border:1px solid var(--line);
+    }
+
+    .grid{display:grid; gap:16px; margin-top:18px;}
+    .kpis{grid-template-columns: repeat(3, minmax(0,1fr));}
+    .two{grid-template-columns: 1fr 1fr;}
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+    h2{font-size:14px; margin:0 0 10px}
+    .muted{color:var(--muted); font-size:13px}
+
+    .kpiCard .label{color:var(--muted); font-size:12px}
+    .kpiCard .value{font-size:22px; font-weight:800; margin-top:6px}
+    .kpiCard .sub{margin-top:6px; color:var(--muted); font-size:12px}
+
+    .controls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    input[type="search"], select{
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+      font-size:13px;
+      min-width:240px;
+      outline:none;
+    }
+    select{min-width:200px}
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+      overflow:hidden;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+    th,td{padding:10px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top}
+    th{background:#f8fafc; color:#0f172a; font-size:12px}
+    tr:last-child td{border-bottom:0}
+    .tag{
+      display:inline-flex;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .footer{
+      margin:18px 0 6px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+    }
+    @media (max-width: 980px){
+      .kpis{grid-template-columns: 1fr;}
+      nav{justify-content:flex-start}
+      input[type="search"]{min-width:100%}
+      select{min-width:100%}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="top">
+        <div class="brand">
+          <div class="logo">HDT</div>
+          <div class="title">
+            <h1>Métricas & KPIs — Hospital Docente de Trujillo</h1>
+            <p>PPM · BIM · ICE — Tablero de KPIs y metas por indicador</p>
+          </div>
+        </div>
+
+        <nav>
+          <span class="chip">Fase: <b>RIBA 3–4</b></span>
+          <a class="btn secondary" href="./index.html">Inicio</a>
+          <a class="btn secondary" href="./modelos.html">Modelos</a>
+          <a class="btn secondary" href="./metricas.html" aria-current="page">Métricas</a>
+          <a class="btn secondary" href="./opciones.html">Opciones</a>
+          <a class="btn" id="btnAcc" href="#" target="_blank" rel="noreferrer">Abrir ACC</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- KPI Summary Cards -->
+    <section class="grid kpis" id="summaryCards">
+      <!-- JS inserts cards -->
+    </section>
+
+    <!-- Controls + Table -->
+    <section class="grid two">
+      <div class="card">
+        <h2>Filtros</h2>
+        <p class="muted">Busca por código, indicador, meta o responsable.</p>
+        <div class="controls">
+          <input id="search" type="search" placeholder="Buscar… (ej. KPI.04, Uniclass, Contratista)" />
+          <select id="typeFilter">
+            <option value="ALL">Todos los tipos</option>
+          </select>
+          <button class="btn secondary" id="btnClear" type="button">Limpiar</button>
+        </div>
+        <div style="height:10px"></div>
+        <div class="muted">
+          Mostrando: <b id="shownCount">0</b> / <b id="totalCount">0</b> KPIs
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Notas operativas</h2>
+        <ul class="muted" style="margin:0; padding-left:18px">
+          <li>Usa estas metas como referencia en auditoría continua y reportes semanales.</li>
+          <li>Vincula cada KPI a evidencia: reporte QA, clash report, acta ICE, transmittal ACC.</li>
+          <li>Si deseas, luego conectamos estos KPIs a un Google Sheet para actualización automática.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Listado de KPIs</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Código</th>
+              <th>Indicador</th>
+              <th>Meta</th>
+              <th>Responsable</th>
+            </tr>
+          </thead>
+          <tbody id="kpiBody">
+            <!-- JS inserts rows -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="footer">
+      © 2026 · Portal HDT · Métricas & KPIs
+    </div>
+  </div>
+
+  <script>
+    // === CONFIGURA TU ENLACE ACC (si quieres) ===
+    const LINKS = {
+      acc: "https://construction.autodesk.com/" // reemplaza por tu URL de proyecto en ACC
+    };
+    document.getElementById("btnAcc").href = LINKS.acc;
+
+    // === KPIs (extraídos de tu KPIS.xlsx) ===
+    const KPIS = [
+      { tipo: "MÉTRICAS PPM", codigo: "KPI.01", indicador: "Incidencias resueltas.", meta: "KPI.01 = 75% mínimo por paquete para Presentación 1.\nKPI.01 = 85% mínimo por paquete para Presentación 2.\nKPI.01 = 95% mínimo por paquete para Presentación 3.\nKPI.01 = 100% para fase Puesta en Marcha.", responsable: "Contratista" },
+      { tipo: "MÉTRICAS PPM", codigo: "KPI.02", indicador: "Incidencias de alto y mediano impacto resueltas.", meta: "KPI.02 = 75% mínimo por paquete para Presentación 1.\nKPI.02 = 85% mínimo por paquete para Presentación 2.\nKPI.02 = 55% mínimo por paquete para Presentación 3.\nKPI.02 = 100% para fase Puesta en Marcha.", responsable: "Contratista" },
+      { tipo: "MÉTRICAS PPM", codigo: "KPI.03", indicador: "Incidencias por especialidad.", meta: "KPI.03 = >% por especialidad.", responsable: "Contratista" },
+
+      { tipo: "MÉTRICAS BIM", codigo: "KPI.04", indicador: "Modelos validados y aceptados.", meta: "KPI.04 = 100% por cada entrega de Presentación.", responsable: "Supervisor / Gerente de Proyecto" },
+      { tipo: "MÉTRICAS BIM", codigo: "KPI.05", indicador: "Modelos compatibilizados.", meta: "KPI.05 = 100% por cada entrega de Presentación.", responsable: "Contratista / Supervisor" },
+      { tipo: "MÉTRICAS BIM", codigo: "KPI.06", indicador: "Planos desde el modelo.", meta: "KPI.06 = > 80% por cada entrega de Presentación.", responsable: "Contratista" },
+      { tipo: "MÉTRICAS BIM", codigo: "KPI.07", indicador: "Parámetros en modelo 4D.", meta: "KPI.07 = > 70% mínimo por paquete para Presentación 1.\nKPI.07 = 100% por paquete para Presentación 2.", responsable: "Contratista" },
+      { tipo: "MÉTRICAS BIM", codigo: "KPI.08", indicador: "Parámetros en modelo 5D.", meta: "KPI.07 = > 70% mínimo por paquete para Presentación 1.\nKPI.07 = 100% por paquete para Presentación 2.", responsable: "Contratista" },
+      { tipo: "MÉTRICAS BIM", codigo: "KPI.09", indicador: "Metrados desde modelo.", meta: "KPI.09 = > 75% por cada entrega de Presentación.", responsable: "Contratista" },
+      { tipo: "MÉTRICAS BIM", codigo: "KPI.10", indicador: "Data Uniclass en modelos.", meta: "KPI.10 = > 70% mínimo por paquete para Presentación 1.\nKPI.10 = 100% por paquete para Presentación 2.\nKPI.10 = 100% por paquete para Presentación 3.\nKPI.10 = 100% por paquete para Puesta en Marcha.", responsable: "Contratista" },
+      { tipo: "MÉTRICAS BIM", codigo: "KPI.11", indicador: "Data COBie en modeloss.", meta: "KPI.11 = > 50% mínimo por paquete para Presentación 1.\nKPI.11 = 80% mínimo por paquete para Presentación 2.\nKPI.11 = 100% por paquete para Presentación 3.\nKPI.11 = 100% por paquete para Puesta en Marcha.", responsable: "Contratista / Supervisor" },
+
+      { tipo: "MÉTRICAS ICE", codigo: "KPI.12", indicador: "Participación en sesiones.", meta: "KPI.12 = 1", responsable: "Contratista / Supervisor" }
+    ];
+
+    // --- Helpers ---
+    const norm = (s) => (s ?? "").toString().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"");
+    const escapeHtml = (s) =>
+      (s ?? "").toString()
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    const toMultilineHtml = (s) => escapeHtml(s).replaceAll("\n","<br/>");
+
+    // --- Build type filter & summary ---
+    const types = [...new Set(KPIS.map(k => k.tipo))].sort();
+    const typeFilter = document.getElementById("typeFilter");
+    types.forEach(t => {
+      const opt = document.createElement("option");
+      opt.value = t; opt.textContent = t;
+      typeFilter.appendChild(opt);
+    });
+
+    document.getElementById("totalCount").textContent = KPIS.length.toString();
+
+    function renderSummaryCards(items){
+      const container = document.getElementById("summaryCards");
+      container.innerHTML = "";
+
+      const countByType = items.reduce((acc, k) => {
+        acc[k.tipo] = (acc[k.tipo] || 0) + 1;
+        return acc;
+      }, {});
+
+      types.forEach(t => {
+        const n = countByType[t] || 0;
+        const card = document.createElement("div");
+        card.className = "card kpiCard";
+        card.innerHTML = `
+          <div class="label">${escapeHtml(t)}</div>
+          <div class="value">${n}</div>
+          <div class="sub">Indicadores en este grupo</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderTable(items){
+      const body = document.getElementById("kpiBody");
+      body.innerHTML = "";
+
+      items.forEach(k => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><span class="tag">${escapeHtml(k.tipo)}</span></td>
+          <td><b>${escapeHtml(k.codigo)}</b></td>
+          <td>${escapeHtml(k.indicador)}</td>
+          <td>${toMultilineHtml(k.meta)}</td>
+          <td>${escapeHtml(k.responsable)}</td>
+        `;
+        body.appendChild(tr);
+      });
+
+      document.getElementById("shownCount").textContent = items.length.toString();
+    }
+
+    function applyFilters(){
+      const q = norm(document.getElementById("search").value);
+      const t = document.getElementById("typeFilter").value;
+
+      const filtered = KPIS.filter(k => {
+        const matchesType = (t === "ALL") ? true : (k.tipo === t);
+        if(!matchesType) return false;
+
+        if(!q) return true;
+
+        const blob = norm([
+          k.tipo, k.codigo, k.indicador, k.meta, k.responsable
+        ].join(" "));
+        return blob.includes(q);
+      });
+
+      renderSummaryCards(filtered);
+      renderTable(filtered);
+    }
+
+    // Init
+    renderSummaryCards(KPIS);
+    renderTable(KPIS);
+
+    // Events
+    document.getElementById("search").addEventListener("input", applyFilters);
+    document.getElementById("typeFilter").addEventListener("change", applyFilters);
+    document.getElementById("btnClear").addEventListener("click", () => {
+      document.getElementById("search").value = "";
+      document.getElementById("typeFilter").value = "ALL";
+      applyFilters();
+    });
+  </script>
+</body>
+</html>
