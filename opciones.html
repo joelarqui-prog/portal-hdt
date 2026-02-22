@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Opciones de Diseño – Portal HDT</title>
+  <style>
+    :root{
+      --bg:#f6f8fb; --card:#fff; --text:#0f172a; --muted:#475569;
+      --primary:#0066cc; --ok:#16a34a; --warn:#f59e0b; --bad:#dc2626;
+      --line:#e2e8f0; --shadow:0 10px 25px rgba(2,6,23,.08);
+      --radius:14px; --max:1200px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);
+      background:linear-gradient(180deg,#fff 0%,var(--bg) 35%,var(--bg) 100%);}
+    a{color:var(--primary);text-decoration:none} a:hover{text-decoration:underline}
+    .wrap{max-width:var(--max);margin:0 auto;padding:22px}
+    header{background:rgba(255,255,255,.75);backdrop-filter:blur(10px);
+      border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px 18px 14px;}
+    .top{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .brand{display:flex;gap:12px;align-items:center;min-width:260px}
+    .logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--primary),#1d4ed8);
+      display:grid;place-items:center;color:#fff;font-weight:800;letter-spacing:.5px}
+    .title h1{margin:0;font-size:18px;line-height:1.2}
+    .title p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+    .chip{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:#fff;
+      padding:8px 10px;border-radius:999px;font-size:13px;color:var(--text)}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:var(--primary);
+      color:#fff;border:1px solid rgba(0,0,0,.05);font-weight:700;font-size:13px;box-shadow:0 10px 18px rgba(0,102,204,.18)}
+    .btn.secondary{background:#fff;color:var(--text);box-shadow:none;border:1px solid var(--line)}
+    .grid{display:grid;gap:16px;margin-top:18px}
+    .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .two{grid-template-columns:1.3fr 1fr}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px}
+    h2{font-size:14px;margin:0 0 10px}
+    .muted{color:var(--muted);font-size:13px}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);
+      background:#fff;font-size:12px;color:var(--muted);width:fit-content}
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--ok)}
+    .dot.warn{background:var(--warn)} .dot.bad{background:var(--bad)}
+    table{width:100%;border-collapse:collapse;font-size:13px;border-radius:12px;border:1px solid var(--line);background:#fff;overflow:hidden}
+    th,td{padding:10px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+    th{background:#f8fafc;font-size:12px}
+    tr:last-child td{border-bottom:0}
+    .kpis{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:10px}
+    .kpi{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}
+    .kpi .l{color:var(--muted);font-size:12px}
+    .kpi .v{font-weight:800;font-size:18px;margin-top:4px}
+    .footer{margin:18px 0 6px;color:var(--muted);font-size:12px;text-align:center}
+    @media (max-width:980px){.cards{grid-template-columns:1fr}.two{grid-template-columns:1fr}nav{justify-content:flex-start}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="top">
+        <div class="brand">
+          <div class="logo">HDT</div>
+          <div class="title">
+            <h1>Opciones de Diseño — Hospital Docente de Trujillo</h1>
+            <p>Comparación de alternativas · evidencia de decisión · set-based design</p>
+          </div>
+        </div>
+        <nav>
+          <span class="chip">Fase: <b>RIBA 3–4</b></span>
+          <a class="btn secondary" href="./index.html">Inicio</a>
+          <a class="btn secondary" href="./modelos.html">Modelos</a>
+          <a class="btn secondary" href="./opciones.html" aria-current="page">Opciones</a>
+          <a class="btn" id="btnDecisionLog" href="#" target="_blank" rel="noreferrer">Registro decisiones</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Tarjetas de opciones -->
+    <section class="grid cards">
+      <div class="card">
+        <h2>Opción A — Base</h2>
+        <p class="muted">Diseño de referencia (baseline) para comparación.</p>
+        <div class="pill"><span class="dot"></span> Estado: Referencia</div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="l">Área</div><div class="v" id="a_area">—</div></div>
+          <div class="kpi"><div class="l">Costo (estim.)</div><div class="v" id="a_cost">—</div></div>
+          <div class="kpi"><div class="l">Clashes</div><div class="v" id="a_clash">—</div></div>
+          <div class="kpi"><div class="l">Riesgo</div><div class="v" id="a_risk">—</div></div>
+        </div>
+
+        <div style="height:10px"></div>
+        <a class="btn secondary" id="a_view" href="#" target="_blank" rel="noreferrer">Ver modelo</a>
+        <a class="btn secondary" id="a_report" href="#" target="_blank" rel="noreferrer">Ver reporte QA</a>
+      </div>
+
+      <div class="card">
+        <h2>Opción B — PMA reducido</h2>
+        <p class="muted">Alternativa por optimización de PMA / huella.</p>
+        <div class="pill"><span class="dot warn"></span> Estado: En evaluación</div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="l">Área</div><div class="v" id="b_area">—</div></div>
+          <div class="kpi"><div class="l">Costo (estim.)</div><div class="v" id="b_cost">—</div></div>
+          <div class="kpi"><div class="l">Clashes</div><div class="v" id="b_clash">—</div></div>
+          <div class="kpi"><div class="l">Riesgo</div><div class="v" id="b_risk">—</div></div>
+        </div>
+
+        <div style="height:10px"></div>
+        <a class="btn secondary" id="b_view" href="#" target="_blank" rel="noreferrer">Ver modelo</a>
+        <a class="btn secondary" id="b_report" href="#" target="_blank" rel="noreferrer">Ver reporte QA</a>
+      </div>
+
+      <div class="card">
+        <h2>Opción C — Layout alternativo UPSS</h2>
+        <p class="muted">Variación de flujos / zonificación para compatibilidad.</p>
+        <div class="pill"><span class="dot warn"></span> Estado: En evaluación</div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="l">Área</div><div class="v" id="c_area">—</div></div>
+          <div class="kpi"><div class="l">Costo (estim.)</div><div class="v" id="c_cost">—</div></div>
+          <div class="kpi"><div class="l">Clashes</div><div class="v" id="c_clash">—</div></div>
+          <div class="kpi"><div class="l">Riesgo</div><div class="v" id="c_risk">—</div></div>
+        </div>
+
+        <div style="height:10px"></div>
+        <a class="btn secondary" id="c_view" href="#" target="_blank" rel="noreferrer">Ver modelo</a>
+        <a class="btn secondary" id="c_report" href="#" target="_blank" rel="noreferrer">Ver reporte QA</a>
+      </div>
+    </section>
+
+    <!-- Comparación -->
+    <section class="grid two">
+      <div class="card">
+        <h2>Tabla comparativa (A vs B vs C)</h2>
+        <p class="muted">Llena con métricas que soportan la decisión (VDC: costo–tiempo–calidad–riesgo).</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Criterio</th>
+              <th>Opción A</th>
+              <th>Opción B</th>
+              <th>Opción C</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Área (m²)</td><td id="t_a_area">—</td><td id="t_b_area">—</td><td id="t_c_area">—</td></tr>
+            <tr><td>Costo (estim.)</td><td id="t_a_cost">—</td><td id="t_b_cost">—</td><td id="t_c_cost">—</td></tr>
+            <tr><td>Clashes (abiertos)</td><td id="t_a_clash">—</td><td id="t_b_clash">—</td><td id="t_c_clash">—</td></tr>
+            <tr><td>Impacto cronograma</td><td id="t_a_time">—</td><td id="t_b_time">—</td><td id="t_c_time">—</td></tr>
+            <tr><td>Riesgo (H/M/L)</td><td id="t_a_risk">—</td><td id="t_b_risk">—</td><td id="t_c_risk">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Decisión</h2>
+        <p class="muted">Registra el estado y evidencia de aprobación.</p>
+        <table>
+          <thead><tr><th>Dato</th><th>Valor</th></tr></thead>
+          <tbody>
+            <tr><td>Opción recomendada</td><td id="decision_reco">—</td></tr>
+            <tr><td>Estado</td><td id="decision_status">—</td></tr>
+            <tr><td>Fecha de decisión</td><td id="decision_date">—</td></tr>
+            <tr><td>Evidencia</td><td><a id="decision_evidence" href="#" target="_blank" rel="noreferrer">Abrir</a></td></tr>
+          </tbody>
+        </table>
+        <div style="height:10px"></div>
+        <div class="muted">Tip: evidencia típica = acta ICE / carta / transmittal / minutas.</div>
+      </div>
+    </section>
+
+    <div class="footer">© 2026 · Portal HDT · Opciones de diseño</div>
+  </div>
+
+  <script>
+    // === CONFIGURA LINKS REALES ===
+    const LINKS = {
+      decisionLog: "#",
+      A: { view:"#", report:"#"},
+      B: { view:"#", report:"#"},
+      C: { view:"#", report:"#"},
+      decisionEvidence: "#"
+    };
+
+    // === MÉTRICAS (manual al inicio; luego puedes automatizar) ===
+    const DATA = {
+      A: { area:"38,500", cost:"S/ 0.0M", clash:"28", risk:"M", time:"Base" },
+      B: { area:"35,900", cost:"S/ 0.0M", clash:"31", risk:"M", time:"+2 semanas" },
+      C: { area:"38,200", cost:"S/ 0.0M", clash:"24", risk:"B", time:"+1 semana" },
+      decision: { reco:"Opción C", status:"En evaluación", date:new Date().toISOString().slice(0,10) }
+    };
+
+    // Buttons / Links
+    document.getElementById("btnDecisionLog").href = LINKS.decisionLog;
+    ["a","b","c"].forEach((k, i) => {
+      const key = ["A","B","C"][i];
+      document.getElementById(k+"_view").href = LINKS[key].view;
+      document.getElementById(k+"_report").href = LINKS[key].report;
+    });
+    document.getElementById("decision_evidence").href = LINKS.decisionEvidence;
+
+    // Cards
+    const map = (prefix, obj) => {
+      document.getElementById(prefix+"_area").textContent = obj.area;
+      document.getElementById(prefix+"_cost").textContent = obj.cost;
+      document.getElementById(prefix+"_clash").textContent = obj.clash;
+      document.getElementById(prefix+"_risk").textContent = obj.risk;
+    };
+    map("a", DATA.A); map("b", DATA.B); map("c", DATA.C);
+
+    // Table
+    const set = (id, v) => document.getElementById(id).textContent = v;
+    set("t_a_area", DATA.A.area); set("t_b_area", DATA.B.area); set("t_c_area", DATA.C.area);
+    set("t_a_cost", DATA.A.cost); set("t_b_cost", DATA.B.cost); set("t_c_cost", DATA.C.cost);
+    set("t_a_clash", DATA.A.clash); set("t_b_clash", DATA.B.clash); set("t_c_clash", DATA.C.clash);
+    set("t_a_time", DATA.A.time); set("t_b_time", DATA.B.time); set("t_c_time", DATA.C.time);
+    set("t_a_risk", DATA.A.risk); set("t_b_risk", DATA.B.risk); set("t_c_risk", DATA.C.risk);
+
+    // Decision
+    set("decision_reco", DATA.decision.reco);
+    set("decision_status", DATA.decision.status);
+    set("decision_date", DATA.decision.date);
+  </script>
+</body>
+</html>
