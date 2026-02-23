@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Modelos BIM – Portal HDT</title>
+  <title>Modelos — Portal HDT</title>
   <style>
     :root{
       --bg:#f6f8fb;
@@ -11,13 +11,15 @@
       --text:#0f172a;
       --muted:#475569;
       --primary:#0066cc;
-      --ok:#16a34a;
-      --warn:#f59e0b;
-      --bad:#dc2626;
       --line:#e2e8f0;
       --shadow: 0 10px 25px rgba(2,6,23,.08);
       --radius:14px;
       --max:1200px;
+      --green:#16a34a;
+      --yellow:#f59e0b;
+      --red:#dc2626;
+      --gray:#94a3b8;
+      --blue:#2563eb;
     }
     *{box-sizing:border-box}
     body{
@@ -44,28 +46,29 @@
       justify-content:space-between;
       flex-wrap:wrap;
     }
-    .brand{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      min-width:260px;
-    }
+    .brand{display:flex; gap:12px; align-items:center; min-width:260px;}
     .logo{
       width:44px;height:44px;border-radius:12px;
       background:linear-gradient(135deg,var(--primary),#1d4ed8);
       display:grid;place-items:center;
-      color:#fff;font-weight:800;
-      letter-spacing:.5px;
+      color:#fff;font-weight:800; letter-spacing:.5px;
     }
     .title h1{margin:0; font-size:18px; line-height:1.2}
     .title p{margin:4px 0 0; color:var(--muted); font-size:13px}
 
-    nav{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      align-items:center;
+    nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; align-items:center;}
+    .btn{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px; border-radius:12px;
+      background:#fff; color:var(--text);
+      border:1px solid var(--line);
+      font-weight:700; font-size:13px;
+    }
+    .btn.primary{
+      background:var(--primary);
+      color:#fff;
+      border:1px solid rgba(0,0,0,.05);
+      box-shadow: 0 10px 18px rgba(0,102,204,.18);
     }
     .chip{
       display:inline-flex; gap:8px; align-items:center;
@@ -76,28 +79,12 @@
       font-size:13px;
       color:var(--text);
     }
-    .chip b{font-weight:700}
-    .btn{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:10px 12px;
-      border-radius:12px;
-      background:var(--primary);
-      color:#fff;
-      border:1px solid rgba(0,0,0,.05);
-      font-weight:700;
-      font-size:13px;
-      box-shadow: 0 10px 18px rgba(0,102,204,.18);
-    }
-    .btn.secondary{
-      background:#fff;
-      color:var(--text);
-      box-shadow:none;
-      border:1px solid var(--line);
-    }
+    .chip b{font-weight:800}
 
     .grid{display:grid; gap:16px; margin-top:18px;}
-    .two{grid-template-columns: 1.4fr 1fr;}
-    .three{grid-template-columns: repeat(3, minmax(0,1fr));}
+    .two{grid-template-columns: 1.2fr .8fr;}
+    .kpis{grid-template-columns: repeat(4, minmax(0,1fr));}
+
     .card{
       background:var(--card);
       border:1px solid var(--line);
@@ -105,21 +92,21 @@
       box-shadow: var(--shadow);
       padding:14px;
     }
-
     h2{font-size:14px; margin:0 0 10px}
     .muted{color:var(--muted); font-size:13px}
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px; border-radius:999px;
+    .small{font-size:12px; color:var(--muted)}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+
+    select, input{
+      padding:10px 12px;
       border:1px solid var(--line);
+      border-radius:12px;
       background:#fff;
-      font-size:12px; color:var(--muted);
-      width:fit-content;
-      margin-top:10px;
+      font-size:13px;
+      outline:none;
+      min-width:220px;
     }
-    .dot{width:10px;height:10px;border-radius:999px; background:var(--ok)}
-    .dot.warn{background:var(--warn)}
-    .dot.bad{background:var(--bad)}
+    input{min-width:260px}
 
     table{
       width:100%;
@@ -134,32 +121,45 @@
     th{background:#f8fafc; color:#0f172a; font-size:12px}
     tr:last-child td{border-bottom:0}
 
-    .viewer{
-      width:100%;
-      height:520px;
-      border:1px dashed #cbd5e1;
-      background:#f8fafc;
-      border-radius:12px;
-      display:grid;
-      place-items:center;
+    .tag{
+      display:inline-flex;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:12px;
       color:var(--muted);
-      text-align:center;
-      padding:18px;
+      white-space:nowrap;
     }
-    .links{display:flex; gap:10px; flex-wrap:wrap}
 
-    .footer{
-      margin:18px 0 6px;
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px dashed var(--line);
+      background:#fff;
       color:var(--muted);
       font-size:12px;
-      text-align:center;
     }
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--gray)}
+    .dot.green{background:var(--green)}
+    .dot.yellow{background:var(--yellow)}
+    .dot.red{background:var(--red)}
+    .dot.blue{background:var(--blue)}
+
+    .kpiCard .label{color:var(--muted); font-size:12px}
+    .kpiCard .value{font-size:22px; font-weight:900; margin-top:6px}
+    .kpiCard .sub{margin-top:6px; color:var(--muted); font-size:12px}
+
+    .footer{margin:18px 0 6px; color:var(--muted); font-size:12px; text-align:center;}
 
     @media (max-width: 980px){
-      .two{grid-template-columns:1fr}
-      .three{grid-template-columns:1fr}
+      .two{grid-template-columns: 1fr;}
+      .kpis{grid-template-columns: 1fr;}
       nav{justify-content:flex-start}
-      .viewer{height:420px}
+      select,input{min-width:100%}
     }
   </style>
 </head>
@@ -171,233 +171,404 @@
         <div class="brand">
           <div class="logo">HDT</div>
           <div class="title">
-            <h1>Modelos BIM — Hospital Docente de Trujillo</h1>
-            <p>Modelo federado · Visores · Enlaces a ACC · Salud del modelo</p>
+            <h1>Modelos — Hospital Docente de Trujillo</h1>
+            <p>Listado de modelos federados y por sistemas · Filtros: FASE · DISCIPLINA · SISTEMA</p>
           </div>
         </div>
 
         <nav>
-          <span class="chip">Fase: <b>RIBA 3–4</b></span>
-          <a class="btn secondary" href="./index.html">Inicio</a>
-          <a class="btn secondary" href="./modelos.html" aria-current="page">Modelos</a>
-          <a class="btn secondary" href="./metricas.html">Métricas</a>
-          <a class="btn secondary" href="./incidencias.html">Incidencias</a>
+          <span class="chip">Convención: <b>R2/R3/R4</b></span>
+          <a class="btn" href="./index.html">Inicio</a>
+          <a class="btn primary" href="./modelos.html" aria-current="page">Modelos</a>
+          <a class="btn" href="./metricas.html">Métricas</a>
+          <a class="btn" href="./opciones.html">Opciones</a>
           <a class="btn" id="btnAcc" href="#" target="_blank" rel="noreferrer">Abrir ACC</a>
         </nav>
       </div>
     </header>
 
-    <!-- Bloque superior: Visor / Federado -->
+    <!-- KPIs resumen -->
+    <section class="grid kpis" id="summaryCards"></section>
+
+    <!-- Controles -->
     <section class="grid two">
       <div class="card">
-        <h2>Visor de modelos (IFC / Federado)</h2>
-        <p class="muted">
-          Google Sites/ACC/visores web suelen embebirse con iframe. Aquí puedes:
-          (1) insertar un visor web (si tienes URL), o (2) dejar enlaces a ACC Model Viewer.
-        </p>
+        <h2>Filtros</h2>
+        <p class="muted">Filtra el listado de modelos por fase, disciplina y sistema. El listado se alimenta desde un CSV publicado en Google Sheets.</p>
 
-        <!-- Opción A: Pega aquí un iframe si tienes un visor web -->
-        <!--
-        <iframe
-          src="https://TU-VISOR-IFC.example"
-          width="100%"
-          height="520"
-          style="border:0;border-radius:12px;overflow:hidden"
-          loading="lazy"
-          allowfullscreen
-        ></iframe>
-        -->
+        <div class="row">
+          <select id="phaseFilter" aria-label="Filtro fase">
+            <option value="ALL">Todas las fases</option>
+            <option value="R2">R2 (RIBA 2)</option>
+            <option value="R3" selected>R3 (RIBA 3)</option>
+            <option value="R4">R4 (RIBA 4)</option>
+          </select>
 
-        <!-- Opción B: Placeholder hasta tener el visor -->
-        <div class="viewer">
-          <div>
-            <div style="font-weight:800; color:#0f172a; margin-bottom:6px;">
-              Aquí irá tu visor IFC / modelo federado
-            </div>
-            <div>
-              Cuando tengas una URL embebible, reemplaza este bloque por un iframe (comentado arriba).
-              <br/>Mientras tanto usa los botones de acceso a ACC / links por disciplina.
-            </div>
-          </div>
+          <select id="disciplineFilter" aria-label="Filtro disciplina">
+            <option value="ALL">Todas las disciplinas</option>
+            <option value="AR">AR — Arquitectura</option>
+            <option value="SE">SE — Seguridad y evacuación</option>
+            <option value="ES">ES — Estructuras</option>
+            <option value="EQ">EQ — Equipamiento médico</option>
+            <option value="IE">IE — IIEE</option>
+            <option value="IM">IM — IIMM</option>
+            <option value="IS">IS — IISS</option>
+            <option value="IT">IT — Comunicaciones</option>
+          </select>
+
+          <select id="systemFilter" aria-label="Filtro sistema">
+            <option value="ALL">Todos los sistemas</option>
+          </select>
+
+          <input id="searchBox" type="search" placeholder="Buscar por código / sistema / disciplina…" aria-label="Buscar"/>
         </div>
 
-        <div style="height:12px"></div>
-        <div class="links">
-          <a class="btn secondary" id="lnkFederado" href="#" target="_blank" rel="noreferrer">Modelo federado (ACC/Viewer)</a>
-          <a class="btn secondary" id="lnkCdeModelos" href="#" target="_blank" rel="noreferrer">Carpeta Modelos en ACC</a>
-          <a class="btn secondary" id="lnkNomenclatura" href="#" target="_blank" rel="noreferrer">Nomenclatura / Estándares</a>
+        <div style="height:10px"></div>
+
+        <div class="row">
+          <button class="btn" id="btnClear" type="button">Limpiar filtros</button>
+          <button class="btn primary" id="btnReload" type="button">Actualizar datos</button>
+          <span class="pill" id="dataStatus"><span class="dot blue"></span>Cargando…</span>
+        </div>
+
+        <div class="small" style="margin-top:10px">
+          Columnas esperadas en tu Google Sheet (CSV):<br/>
+          <b>fase</b>, <b>disciplina</b>, <b>sistema_codigo</b>, <b>sistema_nombre</b>, <b>tipo</b>, <b>codigo_modelo</b><br/>
+          Opcional: <b>link</b> (para abrir el modelo en ACC/Docs/Viewer).
         </div>
       </div>
 
       <div class="card">
-        <h2>Salud del modelo (resumen)</h2>
-        <p class="muted">Valores referenciales. Ajusta con tus métricas reales de auditoría.</p>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Métrica</th>
-              <th>Valor</th>
-              <th>Semáforo</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Última publicación de modelos</td>
-              <td id="m_last_pub">—</td>
-              <td><span class="pill"><span class="dot"></span>OK</span></td>
-            </tr>
-            <tr>
-              <td>Modelos en revisión</td>
-              <td id="m_in_review">—</td>
-              <td><span class="pill"><span class="dot warn"></span>Revisión</span></td>
-            </tr>
-            <tr>
-              <td>Incidencias por resolver (modelo)</td>
-              <td id="m_issues">—</td>
-              <td><span class="pill"><span class="dot warn"></span>Atención</span></td>
-            </tr>
-            <tr>
-              <td>Calidad de datos (parámetros mínimos)</td>
-              <td id="m_data_quality">—</td>
-              <td><span class="pill"><span class="dot"></span>OK</span></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div style="height:12px"></div>
-        <h2>Descargas / entregables</h2>
-        <p class="muted">Enlaza aquí tus paquetes por disciplina (IFC/NWD/ZIP/PDF).</p>
-        <div class="links">
-          <a class="btn secondary" id="lnkPackArq" href="#" target="_blank" rel="noreferrer">Paquete ARQ</a>
-          <a class="btn secondary" id="lnkPackEst" href="#" target="_blank" rel="noreferrer">Paquete EST</a>
-          <a class="btn secondary" id="lnkPackMep" href="#" target="_blank" rel="noreferrer">Paquete MEP</a>
+        <h2>Fuente de datos</h2>
+        <p class="muted" style="margin:0 0 10px">
+          Recomiendo publicar tu Excel “Estructura Federativa” como Google Sheet y exponerlo como CSV.
+        </p>
+        <div class="small">
+          1) Sube el Excel a Google Drive → Abrir con Google Sheets<br/>
+          2) Archivo → Compartir → <b>Publicar en la web</b><br/>
+          3) Elegir hoja → Formato <b>CSV</b> → Copiar URL<br/>
+          4) Pegar URL en <code>GOOGLE_SHEET_CSV_URL</code> (abajo en el script)
         </div>
       </div>
     </section>
 
-    <!-- Tabla por disciplina -->
+    <!-- Tabla -->
     <section class="grid">
       <div class="card">
-        <h2>Modelos por disciplina</h2>
-        <p class="muted">
-          Recomiendo que el equipo use 1 registro maestro (Sheets/ACC) y aquí solo reflejas enlaces y estado.
-        </p>
-
+        <h2>Listado de modelos</h2>
         <table>
           <thead>
             <tr>
+              <th>Fase</th>
               <th>Disciplina</th>
-              <th>Archivo / Modelo</th>
-              <th>Versión</th>
-              <th>Fecha</th>
-              <th>Estado</th>
+              <th>Sistema</th>
+              <th>Nombre del sistema</th>
+              <th>Tipo</th>
+              <th>Código del modelo</th>
               <th>Enlace</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Arquitectura</td>
-              <td>HDT_ARQ_PIM</td>
-              <td>Rev. A</td>
-              <td>2026-02-21</td>
-              <td><span class="pill"><span class="dot warn"></span>En revisión</span></td>
-              <td><a id="lnkArq" href="#" target="_blank" rel="noreferrer">Abrir</a></td>
-            </tr>
-            <tr>
-              <td>Estructuras</td>
-              <td>HDT_EST_PIM</td>
-              <td>Rev. A</td>
-              <td>2026-02-21</td>
-              <td><span class="pill"><span class="dot"></span>Publicado</span></td>
-              <td><a id="lnkEst" href="#" target="_blank" rel="noreferrer">Abrir</a></td>
-            </tr>
-            <tr>
-              <td>MEP</td>
-              <td>HDT_MEP_PIM</td>
-              <td>Rev. A</td>
-              <td>2026-02-21</td>
-              <td><span class="pill"><span class="dot warn"></span>En coordinación</span></td>
-              <td><a id="lnkMep" href="#" target="_blank" rel="noreferrer">Abrir</a></td>
-            </tr>
-          </tbody>
+          <tbody id="tbody"></tbody>
         </table>
+        <div class="small" id="note" style="margin-top:10px"></div>
       </div>
     </section>
 
-    <!-- Notas de gobernanza -->
-    <section class="grid three">
-      <div class="card">
-        <h2>Publicación / CDE</h2>
-        <p class="muted">
-          Define una ventana de publicación (p. ej. semanal), carpeta oficial de emisión y control de versiones.
-        </p>
-      </div>
-      <div class="card">
-        <h2>LOIN / Parámetros</h2>
-        <p class="muted">
-          Lista los parámetros mínimos por disciplina y valida completitud (auditoría).
-        </p>
-      </div>
-      <div class="card">
-        <h2>Interoperabilidad</h2>
-        <p class="muted">
-          Mantén exportaciones IFC y convenciones consistentes para trazabilidad (OpenBIM).
-        </p>
-      </div>
-    </section>
-
-    <div class="footer">
-      © 2026 · Portal HDT · Modelos BIM
-    </div>
+    <div class="footer">© 2026 · Portal HDT · Modelos</div>
   </div>
 
   <script>
-    // === CONFIGURA AQUÍ TUS ENLACES REALES ===
-    const LINKS = {
-      acc: "https://construction.autodesk.com/",          // URL a tu ACC
-      carpeta_modelos: "#",                               // URL a carpeta Modelos en ACC
-      modelo_federado: "#",                               // URL al viewer/modelo federado
-      nomenclatura: "#",                                  // URL a estándares/nomenclatura (PDF/Docs)
-      pack_arq: "#",
-      pack_est: "#",
-      pack_mep: "#",
-      modelo_arq: "#",
-      modelo_est: "#",
-      modelo_mep: "#"
-    };
+    // =========================
+    // CONFIGURACIÓN
+    // =========================
 
-    // === MÉTRICAS DE SALUD (pueden ser manuales al inicio) ===
-    const HEALTH = {
-      last_pub: new Date().toISOString().slice(0,10),
-      in_review: "2",
-      issues: "18",
-      data_quality: "92%"
-    };
+    // Pega aquí tu URL CSV publicada de Google Sheets:
+    // Debe verse como: https://docs.google.com/spreadsheets/d/e/.../pub?output=csv
+    const GOOGLE_SHEET_CSV_URL = "PEGA_AQUI_TU_URL_CSV";
 
-    // Botón ACC
-    document.getElementById("btnAcc").href = LINKS.acc;
+    // ACC (opcional)
+    const ACC_URL = "https://construction.autodesk.com/";
+    document.getElementById("btnAcc").href = ACC_URL;
 
-    // Links superiores
-    document.getElementById("lnkFederado").href = LINKS.modelo_federado;
-    document.getElementById("lnkCdeModelos").href = LINKS.carpeta_modelos;
-    document.getElementById("lnkNomenclatura").href = LINKS.nomenclatura;
+    // =========================
+    // DEMO DATA (solo si no configuras el CSV)
+    // =========================
+    const DEMO = [
+      { fase:"R3", disciplina:"AR", sistema_codigo:"11001", sistema_nombre:"Distribución", tipo:"Modelo por sistema", codigo_modelo:"11010-CST-F04-DS-R3-001-ZZ-AR-MOD-11001", link:"" },
+      { fase:"R3", disciplina:"AR", sistema_codigo:"12001", sistema_nombre:"Contrapisos / pisos", tipo:"Modelo por sistema", codigo_modelo:"11010-CST-F04-DS-R3-002-ZZ-AR-MOD-12001", link:"" },
+      { fase:"R3", disciplina:"ES", sistema_codigo:"31001", sistema_nombre:"Geometría por sectores", tipo:"Geometría por sectores", codigo_modelo:"11010-CST-F04-DS-R3-001-ZZ-ES-MOD-31001", link:"" },
+      { fase:"R4", disciplina:"IE", sistema_codigo:"51001", sistema_nombre:"Sistema eléctrico 1", tipo:"Modelo por sistema", codigo_modelo:"11010-CST-F04-DS-R4-000-ZZ-IE-MOD-51001", link:"" },
+      { fase:"R4", disciplina:"IM", sistema_codigo:"61001", sistema_nombre:"Sistema mecánico 1", tipo:"Modelo por sistema", codigo_modelo:"11010-CST-F04-DS-R4-000-ZZ-IM-MOD-61001", link:"" },
+      { fase:"R4", disciplina:"IS", sistema_codigo:"71001", sistema_nombre:"Sistema sanitario 1", tipo:"Modelo por sistema", codigo_modelo:"11010-CST-F04-DS-R4-000-ZZ-IS-MOD-71001", link:"" },
+      { fase:"R4", disciplina:"AR", sistema_codigo:"00001", sistema_nombre:"Federado", tipo:"Federado Revit", codigo_modelo:"11010-CST-F04-DS-R4-000-ZZ-AR-MOD-00001", link:"" }
+    ];
 
-    // Packs
-    document.getElementById("lnkPackArq").href = LINKS.pack_arq;
-    document.getElementById("lnkPackEst").href = LINKS.pack_est;
-    document.getElementById("lnkPackMep").href = LINKS.pack_mep;
+    // =========================
+    // HELPERS
+    // =========================
+    const $ = (id) => document.getElementById(id);
+    const escapeHtml = (s) => (s ?? "").toString()
+      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 
-    // Tabla disciplina
-    document.getElementById("lnkArq").href = LINKS.modelo_arq;
-    document.getElementById("lnkEst").href = LINKS.modelo_est;
-    document.getElementById("lnkMep").href = LINKS.modelo_mep;
+    const norm = (s) =>
+      (s ?? "").toString().trim().toUpperCase()
+        .normalize("NFD").replace(/\p{Diacritic}/gu,"");
 
-    // Health
-    document.getElementById("m_last_pub").textContent = HEALTH.last_pub;
-    document.getElementById("m_in_review").textContent = HEALTH.in_review;
-    document.getElementById("m_issues").textContent = HEALTH.issues;
-    document.getElementById("m_data_quality").textContent = HEALTH.data_quality;
+    function parseCSV(text){
+      const rows = [];
+      let row = [], cur = "", inQuotes = false;
+      for(let i=0;i<text.length;i++){
+        const ch = text[i], next = text[i+1];
+        if(ch === '"' && inQuotes && next === '"'){ cur += '"'; i++; }
+        else if(ch === '"'){ inQuotes = !inQuotes; }
+        else if(ch === ',' && !inQuotes){ row.push(cur); cur=""; }
+        else if((ch === '\n' || ch === '\r') && !inQuotes){
+          if(ch === '\r' && next === '\n') i++;
+          row.push(cur); cur="";
+          if(row.some(c => c.trim() !== "")) rows.push(row);
+          row = [];
+        } else cur += ch;
+      }
+      row.push(cur);
+      if(row.some(c => c.trim() !== "")) rows.push(row);
+      return rows;
+    }
+
+    // =========================
+    // DATA LOADING
+    // =========================
+    let DATA = [];
+
+    async function loadData(){
+      const status = $("dataStatus");
+      status.innerHTML = `<span class="dot blue"></span>Cargando datos…`;
+
+      // Si no hay URL, usar demo
+      if(!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL.includes("PEGA_AQUI_TU_URL_CSV")){
+        DATA = DEMO.slice();
+        status.innerHTML = `<span class="dot yellow"></span>Mostrando DEMO (configura URL CSV).`;
+        $("note").textContent = "Configura GOOGLE_SHEET_CSV_URL para listar tu estructura completa desde Google Sheets.";
+        buildSystemDropdown();
+        render();
+        return;
+      }
+
+      try{
+        const res = await fetch(GOOGLE_SHEET_CSV_URL, { cache:"no-store" });
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
+        const text = await res.text();
+        const rows = parseCSV(text);
+        if(rows.length < 2) throw new Error("CSV sin datos");
+
+        const headers = rows[0].map(h => norm(h));
+        const idx = (name) => headers.indexOf(norm(name));
+
+        const iFase = idx("fase");
+        const iDisc = idx("disciplina");
+        const iSysC = idx("sistema_codigo");
+        const iSysN = idx("sistema_nombre");
+        const iTipo = idx("tipo");
+        const iCode = idx("codigo_modelo");
+        const iLink = idx("link"); // opcional
+
+        if(iFase===-1 || iDisc===-1 || iSysC===-1 || iSysN===-1 || iTipo===-1 || iCode===-1){
+          throw new Error("Faltan columnas. Requeridas: fase, disciplina, sistema_codigo, sistema_nombre, tipo, codigo_modelo (link opcional).");
+        }
+
+        const out = [];
+        for(let r=1; r<rows.length; r++){
+          const row = rows[r];
+          const item = {
+            fase: (row[iFase] ?? "").trim(),
+            disciplina: (row[iDisc] ?? "").trim(),
+            sistema_codigo: (row[iSysC] ?? "").trim(),
+            sistema_nombre: (row[iSysN] ?? "").trim(),
+            tipo: (row[iTipo] ?? "").trim(),
+            codigo_modelo: (row[iCode] ?? "").trim(),
+            link: (iLink === -1) ? "" : (row[iLink] ?? "").trim()
+          };
+          if(item.codigo_modelo) out.push(item);
+        }
+
+        DATA = out;
+        status.innerHTML = `<span class="dot green"></span>Datos cargados (${DATA.length} modelos).`;
+        $("note").textContent = "";
+        buildSystemDropdown();
+        render();
+
+      }catch(err){
+        status.innerHTML = `<span class="dot red"></span>Error al cargar CSV`;
+        $("note").textContent = `Detalle: ${err?.message ?? err}`;
+        // fallback demo
+        DATA = DEMO.slice();
+        buildSystemDropdown();
+        render();
+      }
+    }
+
+    // =========================
+    // FILTERS
+    // =========================
+    function getFilters(){
+      return {
+        fase: $("phaseFilter").value,
+        disc: $("disciplineFilter").value,
+        sys: $("systemFilter").value,
+        q: $("searchBox").value.trim()
+      };
+    }
+
+    function applyFilters(){
+      const { fase, disc, sys, q } = getFilters();
+      const qn = norm(q);
+
+      return DATA.filter(it => {
+        const okF = (fase==="ALL") ? true : norm(it.fase) === norm(fase);
+        const okD = (disc==="ALL") ? true : norm(it.disciplina) === norm(disc);
+        const okS = (sys==="ALL") ? true : norm(it.sistema_codigo) === norm(sys);
+
+        let okQ = true;
+        if(qn){
+          const hay = norm(`${it.fase} ${it.disciplina} ${it.sistema_codigo} ${it.sistema_nombre} ${it.tipo} ${it.codigo_modelo}`);
+          okQ = hay.includes(qn);
+        }
+        return okF && okD && okS && okQ;
+      });
+    }
+
+    // Construye dropdown de sistemas según selección actual de fase+disc (para que sea cómodo)
+    function buildSystemDropdown(){
+      const fase = $("phaseFilter").value;
+      const disc = $("disciplineFilter").value;
+
+      const subset = DATA.filter(it => {
+        const okF = (fase==="ALL") ? true : norm(it.fase) === norm(fase);
+        const okD = (disc==="ALL") ? true : norm(it.disciplina) === norm(disc);
+        return okF && okD;
+      });
+
+      const map = new Map(); // code -> name
+      for(const it of subset){
+        if(!it.sistema_codigo) continue;
+        if(!map.has(it.sistema_codigo)) map.set(it.sistema_codigo, it.sistema_nombre || "");
+      }
+
+      const sysSel = $("systemFilter");
+      const current = sysSel.value;
+
+      // reset
+      sysSel.innerHTML = `<option value="ALL">Todos los sistemas</option>`;
+      const sorted = [...map.entries()].sort((a,b) => (a[0] > b[0] ? 1 : -1));
+      for(const [code,name] of sorted){
+        const label = name ? `${code} — ${name}` : code;
+        const opt = document.createElement("option");
+        opt.value = code;
+        opt.textContent = label;
+        sysSel.appendChild(opt);
+      }
+
+      // keep selection if possible
+      if([...map.keys()].includes(current)) sysSel.value = current;
+      else sysSel.value = "ALL";
+    }
+
+    // =========================
+    // RENDER
+    // =========================
+    function renderSummary(items){
+      const container = $("summaryCards");
+      container.innerHTML = "";
+
+      const total = items.length;
+      const byPhase = { R2:0, R3:0, R4:0 };
+      const byDisc = new Map();
+      const bySys  = new Map();
+
+      for(const it of items){
+        const p = norm(it.fase);
+        if(p in byPhase) byPhase[p]++;
+        const d = it.disciplina || "—";
+        byDisc.set(d, (byDisc.get(d) || 0) + 1);
+        const s = it.sistema_codigo || "—";
+        bySys.set(s, (bySys.get(s) || 0) + 1);
+      }
+
+      const topDisc = [...byDisc.entries()].sort((a,b)=>b[1]-a[1])[0];
+      const topSys  = [...bySys.entries()].sort((a,b)=>b[1]-a[1])[0];
+
+      const cards = [
+        { label:"Modelos (filtrados)", value: total, sub:"Resultados según filtros" },
+        { label:"R2 / R3 / R4", value: `${byPhase.R2}/${byPhase.R3}/${byPhase.R4}`, sub:"Distribución por fase" },
+        { label:"Disciplina con más modelos", value: topDisc ? `${topDisc[0]} (${topDisc[1]})` : "—", sub:"Top disciplina" },
+        { label:"Sistema más frecuente", value: topSys ? `${topSys[0]} (${topSys[1]})` : "—", sub:"Top sistema" }
+      ];
+
+      for(const c of cards){
+        const div = document.createElement("div");
+        div.className = "card kpiCard";
+        div.innerHTML = `
+          <div class="label">${escapeHtml(c.label)}</div>
+          <div class="value">${escapeHtml(String(c.value))}</div>
+          <div class="sub">${escapeHtml(c.sub)}</div>
+        `;
+        container.appendChild(div);
+      }
+    }
+
+    function renderTable(items){
+      const tbody = $("tbody");
+      tbody.innerHTML = "";
+
+      for(const it of items){
+        const linkCell = it.link
+          ? `<a href="${escapeHtml(it.link)}" target="_blank" rel="noreferrer">Abrir</a>`
+          : "—";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><span class="tag">${escapeHtml(it.fase)}</span></td>
+          <td><span class="tag">${escapeHtml(it.disciplina)}</span></td>
+          <td><b>${escapeHtml(it.sistema_codigo)}</b></td>
+          <td>${escapeHtml(it.sistema_nombre || "")}</td>
+          <td>${escapeHtml(it.tipo || "")}</td>
+          <td><code>${escapeHtml(it.codigo_modelo)}</code></td>
+          <td>${linkCell}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    function render(){
+      const filtered = applyFilters();
+      renderSummary(filtered);
+      renderTable(filtered);
+      $("note").textContent = `Mostrando ${filtered.length} de ${DATA.length} modelos.`;
+    }
+
+    // =========================
+    // EVENTS
+    // =========================
+    $("phaseFilter").addEventListener("change", () => { buildSystemDropdown(); render(); });
+    $("disciplineFilter").addEventListener("change", () => { buildSystemDropdown(); render(); });
+    $("systemFilter").addEventListener("change", render);
+    $("searchBox").addEventListener("input", render);
+
+    $("btnClear").addEventListener("click", () => {
+      $("phaseFilter").value = "R3";
+      $("disciplineFilter").value = "ALL";
+      $("systemFilter").value = "ALL";
+      $("searchBox").value = "";
+      buildSystemDropdown();
+      render();
+    });
+
+    $("btnReload").addEventListener("click", loadData);
+
+    // =========================
+    // INIT
+    // =========================
+    loadData();
   </script>
 </body>
 </html>
